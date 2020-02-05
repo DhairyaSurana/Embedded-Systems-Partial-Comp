@@ -1,4 +1,4 @@
-#include "timerled.h"
+#include "sensor_queue.h"
 
 void initMessageQueue(){
     sensor_queue_handle = xQueueCreate(QUEUE_LEN, sizeof(message));
@@ -47,10 +47,4 @@ message readMsgFromQ1(){
     xQueueReceive(sensor_queue_handle, &m, portMAX_DELAY);
 
     return m;
-}
-
-void *mainThread(void *arg0) {
-
-    return;
-
 }
