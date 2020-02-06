@@ -1,3 +1,11 @@
+/*
+ *
+ *  sensor_queue.c
+ *
+ *  Created on: Feb 5, 2020
+ *  Author: Dhairya Surana
+ */
+
 #include "sensor_queue.h"
 
 void initMessageQueue(){
