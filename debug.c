@@ -69,6 +69,7 @@ static void int_to_bin_digit(unsigned int in, int count, int* out)
 void dbgOutputLoc(unsigned int outLoc){
     if(outLoc>127){
         //fail
+        dbgUARTStr("ERROR WITH DEBUG");
     }
 
     int binLoc[8] = {0};

@@ -21,7 +21,7 @@
 // include debug and queue headers
 
 // Define constants
-#define TIMERTWO_PERIOD     75
+#define TIMERTWO_PERIOD     75000
 
 #define ZERO                0
 #define INVALID_MEASUREMENT -1

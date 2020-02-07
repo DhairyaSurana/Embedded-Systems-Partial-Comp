@@ -17,7 +17,7 @@
 #include "sensor_queue.h"
 // include debug and queue headers
 
-#define TIMERONE_PERIOD     1000
+#define TIMERONE_PERIOD     1000000
 
 void TimerOne_init();
 
