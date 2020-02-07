@@ -1,58 +1,63 @@
-/*
- *
- *  sensor_queue.c
- *
- *  Created on: Feb 5, 2020
- *  Author: Dhairya Surana
- */
-
 #include "sensor_queue.h"
 
-void initMessageQueue(){
-    sensor_queue_handle = xQueueCreate(QUEUE_LEN, sizeof(message));
+void message_init(message *msg)
+{
+    (*msg).type = no_type;
+    (*msg).value.sensor_val = ZERO;
+    (*msg).value.time_val = ZERO;
+
+}
+void MQ_init()
+{
+    sensor = xQueueCreate(QUEUE_LEN, sizeof(message));
 }
 
 
-int sendToQueue(message m){
+int sendToQueue(message m)
+{
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-    BaseType_t result = xQueueSendToBackFromISR(sensor_queue_handle,
+    BaseType_t result = xQueueSendToBackFromISR(sensor,
                                                 &m, &xHigherPriorityTaskWoken);
     return  (pdPASS == result);
 }
 
-int sendTimeMsgToQ1(unsigned int timeVal){
+int sendTimeMsgToQ1(unsigned int timeVal)
+{
 
     message m = {
-           .type=time,
+           .type=time_val,
            .value.sensor_val=0,
            .value.time_val=timeVal
     };
 
-    return sendToQueue(m);
+    int check = sendToQueue(m);
+    return check;
 }
 
-/* Might be blocking based on the Project Specifications.*/
-int sendSensorMsgToQ1(int mmDist){
+int sendSensorMsgToQ1(int mmDist)
+{
 
     message m = {
-         .type=sensor,
+         .type=sensor_val,
          .value.sensor_val=mmDist,
          .value.time_val=0
     };
 
-    return sendToQueue(m);
+    int check = sendToQueue(m);
+    return check;
 }
 
 
-message readMsgFromQ1(){
+message readMsgFromQ1()
+{
 
     message m = {
-          .type=NULL,
+          .type=no_type,
           .value.sensor_val=0,
           .value.time_val=0
     };
 
-    xQueueReceive(sensor_queue_handle, &m, portMAX_DELAY);
+    xQueueReceive(sensor, &m, portMAX_DELAY);
 
     return m;
 }
