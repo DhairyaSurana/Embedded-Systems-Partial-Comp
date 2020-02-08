@@ -1,5 +1,7 @@
 #include "sensor_queue.h"
 
+// testing 1 2 3
+
 void message_init(message *msg)
 {
     (*msg).type = no_type;
