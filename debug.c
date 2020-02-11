@@ -73,12 +73,12 @@ void dbgOutputLoc(unsigned int outLoc){
         dbgUARTStr("ERROR WITH DEBUG");
     }
 
-    int binLoc[8] = {0};
+    int binLoc[9] = {0};
 
     GPIO_write(Board_GPIO0, 1); // toggle
     int_to_bin_digit(outLoc, 8, binLoc);
 
-v
+
     //if(binLoc[0] == 1) {
         GPIO_write(Board_GPIO1, binLoc[8]);
         GPIO_write(Board_GPIO2, binLoc[7]);
