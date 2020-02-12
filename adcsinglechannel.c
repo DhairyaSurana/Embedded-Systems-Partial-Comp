@@ -87,9 +87,9 @@ void vTask1 (void *pvParameters){
           while(1)
           {
 
-              //dbgUARTVal('A');
-              //dbgClearOut();
-              //dbgClearIn();
+              dbgUARTVal('A');
+              dbgClearOut();
+              dbgClearIn();
               /*
               dbgOutputLoc(DLOC_BEFORE_QUEUE_READ);
               msg = readMsgFromQ1();
