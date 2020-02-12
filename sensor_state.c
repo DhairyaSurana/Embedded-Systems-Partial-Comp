@@ -7,15 +7,16 @@
 
 int StateMachine(status_t *curStatus, int timeInc, int sensorVal)
 {
-    dbgOutputLoc(DLOC_ENTER_FSM);
     int sensorAvg;
     char uartOut[33];
     switch (curStatus->curState) {
             case Init:
+                dbgOutputLoc(DLOC_STATE_INIT);
                 curStatus->curTime = 0;
                 curStatus->curState = WaitingForTime1;
                 break;
             case WaitingForTime1:
+                dbgOutputLoc(DLOC_STATE_ONE);
                 if(timeInc == 0)
                 {
                     curStatus->sensorTotal += sensorVal;
@@ -36,6 +37,7 @@ int StateMachine(status_t *curStatus, int timeInc, int sensorVal)
                 }
                 break;
             case WaitingForTime2:
+                dbgOutputLoc(DLOC_STATE_TWO);
                 if(timeInc == 0)
                 {
                     curStatus->sensorTotal += sensorVal;
@@ -55,6 +57,7 @@ int StateMachine(status_t *curStatus, int timeInc, int sensorVal)
                 }
                 break;
             case WaitingForTime3:
+                dbgOutputLoc(DLOC_STATE_THREE);
                 if(timeInc == 0)
                 {
                     curStatus->sensorTotal += sensorVal;
@@ -78,7 +81,7 @@ int StateMachine(status_t *curStatus, int timeInc, int sensorVal)
     }
 
 
-    dbgOutputLoc(DLOC_LEAVE_FSM);
+    dbgOutputLoc(DLOC_STATE_DONE);
 
     return 1;
 }

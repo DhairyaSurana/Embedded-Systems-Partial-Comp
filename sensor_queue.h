@@ -3,6 +3,7 @@
 
 #include <FreeRTOS.h>
 #include <queue.h>
+#include "debug.h"
 
 #define QUEUE_LEN       120
 #define QUEUE_ITEM_SIZE 8

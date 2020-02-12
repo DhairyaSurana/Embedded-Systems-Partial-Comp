@@ -3,7 +3,7 @@
 #include "timerone.h"
 #include "timertwo.h"
 #include "debug.h"
-
+#include <string.h>
 
 
 #include <ti/drivers/GPIO.h>
@@ -14,7 +14,20 @@
 #include <ti/devices/cc32xx/inc/hw_gpio.h>
 
 //#include "string.h"
+void dbgHaltAll(unsigned int outLoc){
+    dbgOutputLoc(outLoc);
 
+    //SYS_INT_Disable();
+    //stop all tasks
+    vTaskSuspendAll();
+    //output that all tasks have been stopped (disable all iterrupts)
+    Timer_stop(TimerOne);
+    Timer_stop(TimerTwo);
+
+    HwiP_disable();
+
+
+}
 
 void initUART()
 {
@@ -22,8 +35,8 @@ void initUART()
     UART_Params uartParams;
     UART_Params_init(&uartParams);
 
-    uartParams.writeMode = UART_DATA_BINARY;
-    uartParams.readMode = UART_DATA_BINARY;
+    uartParams.writeMode = UART_MODE_BLOCKING;
+    uartParams.readMode = UART_MODE_BLOCKING;
     uartParams.writeDataMode = UART_DATA_BINARY;
         uartParams.readDataMode = UART_DATA_BINARY;
         uartParams.baudRate = 115200;
@@ -32,8 +45,9 @@ void initUART()
 
     uart = UART_open(Board_UART0, &uartParams);
 
-    if (uart == NULL)
-         printf("Uaasd");
+    if (uart == NULL){
+        dbgHaltAll(DLOC_UART_FAILED);
+    }
 
 
 }
@@ -70,7 +84,7 @@ static void int_to_bin_digit(unsigned int in, int count, int* out)
 void dbgOutputLoc(unsigned int outLoc){
     if(outLoc>127){
         //fail
-        dbgUARTStr("ERROR WITH DEBUG");
+        dbgHaltAll(DLOC_OVER127_ERROR);
     }
 
     int binLoc[9] = {0};
@@ -96,20 +110,26 @@ void dbgOutputLoc(unsigned int outLoc){
 
 }
 
-void HALT(unsigned int outLoc){
-    dbgOutputLoc(DLOC_FATAL_ERROR);
+void dbgClearOut(){
 
-    //SYS_INT_Disable();
-    //stop all tasks
-    vTaskSuspendAll();
-    //output that all tasks have been stopped (disable all iterrupts)
-    Timer_stop(TimerOne);
-    Timer_stop(TimerTwo);
+    //if(binLoc[0] == 1) {
+        GPIO_write(Board_GPIO1, 0);
+        GPIO_write(Board_GPIO2, 0);
+        GPIO_write(Board_GPIO3, 0);
+        GPIO_write(Board_GPIO4, 0);
+        GPIO_write(Board_GPIO5, 0);
+        GPIO_write(Board_GPIO6, 0);
+        GPIO_write(Board_GPIO7, 0);
+        GPIO_write(Board_GPIO8, 0);
 
-    HwiP_disable();
+        GPIO_write(Board_GPIO0, 0);
+    //}
+
 
 
 }
+
+
 
 void DebugGPIO_init() {
 

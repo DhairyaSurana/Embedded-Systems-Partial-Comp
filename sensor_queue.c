@@ -25,7 +25,7 @@ int sendToQueue(message m)
 
 int sendTimeMsgToQ1(unsigned int timeVal)
 {
-
+    dbgOutputLoc(DLOC_BEFORE_QUEUE_TIME);
     message m = {
            .type=time_val,
            .value.sensor_val=0,
@@ -33,12 +33,13 @@ int sendTimeMsgToQ1(unsigned int timeVal)
     };
 
     int check = sendToQueue(m);
+    dbgOutputLoc(DLOC_AFTER_QUEUE_TIME);
     return check;
 }
 
 int sendSensorMsgToQ1(int mmDist)
 {
-
+    dbgOutputLoc(DLOC_BEFORE_QUEUE_SENSOR);
     message m = {
          .type=sensor_val,
          .value.sensor_val=mmDist,
@@ -46,13 +47,14 @@ int sendSensorMsgToQ1(int mmDist)
     };
 
     int check = sendToQueue(m);
+    dbgOutputLoc(DLOC_AFTER_QUEUE_SENSOR);
     return check;
 }
 
 
 message readMsgFromQ1()
 {
-
+    dbgOutputLoc(DLOC_BEFORE_QUEUE_READ);
     message m = {
           .type=no_type,
           .value.sensor_val=0,
@@ -60,6 +62,6 @@ message readMsgFromQ1()
     };
 
     xQueueReceive(sensor, &m, portMAX_DELAY);
-
+    dbgOutputLoc(DLOC_AFTER_QUEUE_READ);
     return m;
 }

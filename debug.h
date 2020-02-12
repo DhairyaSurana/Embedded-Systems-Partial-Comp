@@ -9,37 +9,47 @@
 ////#include "system_config/default/system_config.h"
 //#include "system_config/default/system_definitions.h"
 
-
+//Initialization
 #define DLOC_ENTER_TASK                 0x01
 #define DLOC_BEFORE_WHILE               0X02
-#define DLOC_WHILE_BEFORE_QUEUE_RECEIVE 0X03
-#define DLOC_WHILE_AFTER_QUEUE_RECEIVE  0X04
-#define DLOC_WHILE_BEFORE_QUEUE_SEND    0X05
-#define DLOC_WHILE_AFTER_QUEUE_SEND     0x06
 
-#define DLOC_ENTER_TIMERONE_ISR         0x07
-#define DLOC_LEAVE_TIMERONE_ISR         0x08
-#define DLOC_TIMERONE_BEFORE_QUEUE      0x09
-#define DLOC_TIMERONE_AFTER_QUEUE       0x0a
+//Timer 1 activated (starts with 1)
+#define DLOC_ENTER_TIMERONE_ISR         0x10
+#define DLOC_LEAVE_TIMERONE_ISR         0x11
 
+//Timer 2 activated (starts with 2)
+#define DLOC_ENTER_TIMERTWO_ISR         0x20
+#define DLOC_LEAVE_TIMERTWO_ISR         0x21
+
+//Queue (Starts with 3)
+#define DLOC_BEFORE_QUEUE_READ          0X30
+#define DLOC_AFTER_QUEUE_READ           0X31
+#define DLOC_BEFORE_QUEUE_SENSOR        0X32
+#define DLOC_AFTER_QUEUE_SENSOR         0X33
+#define DLOC_BEFORE_QUEUE_TIME          0X34
+#define DLOC_AFTER_QUEUE_TIME           0x35
+
+//State Machine (Starts with 4)
+#define DLOC_STATE_INIT                 0x40
+#define DLOC_STATE_ONE                  0x41
+#define DLOC_STATE_TWO                  0x42
+#define DLOC_STATE_THREE                0x43
+#define DLOC_STATE_DONE                 0x44
+
+//ERRORS (starts with 6)
 // Timer 1 errors
-#define DLOC_TIMERONE_FAILED_INIT       0x0b
-#define DLOC_TIMERONE_FAILED_START      0x0c
-
-#define DLOC_ENTER_TIMERTWO_ISR         0x0d
-#define DLOC_LEAVE_TIMERTWO_ISR         0x0e
-#define DLOC_TIMERTWO_BEFORE_QUEUE      0x0f
-#define DLOC_TIMERTWO_AFTER_QUEUE       0x10
+#define DLOC_TIMERONE_FAILED_INIT       0x60
+#define DLOC_TIMERONE_FAILED_START      0x61
 
 // Timer 2 errors
-#define DLOC_TIMETWO_FAILED_INIT        0x11
-#define DLOC_TIMERTWO_FAILED_START      0x12
-#define DLOC_TIMERTWO_ADC_FAILED        0x13
+#define DLOC_TIMETWO_FAILED_INIT        0x63
+#define DLOC_TIMERTWO_FAILED_START      0x64
+#define DLOC_TIMERTWO_ADC_FAILED        0x65
 
-#define DLOC_ENTER_FSM                  0x14
-#define DLOC_LEAVE_FSM                  0x15
+#define DLOC_FATAL_ERROR                0x66
+#define DLOC_UART_FAILED                0x67
+#define DLOC_OVER127_ERROR              0x68
 
-#define DLOC_FATAL_ERROR                0x16
 
 
 
@@ -51,3 +61,5 @@ void dbgOutputLoc(unsigned int outLoc);
 void DebugGPIO_init();
 
 void dbgUARTStr(char outVal[]);
+void dbgClearOut();
+void dbgHaltAll(unsigned int outLoc);

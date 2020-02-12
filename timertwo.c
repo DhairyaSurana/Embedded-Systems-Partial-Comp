@@ -21,12 +21,12 @@ void TimerTwo_init()
 
     if (TimerTwo == NULL)
     {
-        dbgOutputLoc(DLOC_TIMETWO_FAILED_INIT);
+        dbgHaltAll(DLOC_TIMETWO_FAILED_INIT);
     }
 
     if (Timer_start(TimerTwo) == Timer_STATUS_ERROR)
     {
-        dbgOutputLoc(DLOC_TIMERTWO_FAILED_START);
+        dbgHaltAll(DLOC_TIMERTWO_FAILED_START);
 
     }
 }
@@ -40,6 +40,7 @@ void IRSensor_init()
 
 void timer75Callback(Timer_Handle myHandle)
 {
+
     int reading = ADC_convert(adc, &adcValue0);
 
     if(reading == ADC_STATUS_SUCCESS)
@@ -59,6 +60,7 @@ void timer75Callback(Timer_Handle myHandle)
 
     int convertedValue = convertToMM();
     sendSensorMsgToQ1(convertedValue);
+
 }
 
 int convertToMM()
