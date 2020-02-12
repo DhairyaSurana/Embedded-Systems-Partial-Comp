@@ -29,7 +29,8 @@ int StateMachine(status_t *curStatus, int timeInc, int sensorVal)
 
 
                     sprintf(uartOut,"Sensor= %d Count= %d  ",sensorAvg, curStatus->sensorCount);
-                    dbgUARTStr(uartOut);
+                    //dbgUARTStr(uartOut);
+                    dbgUARTStr("STATE 1 ");
                     //UART_write(uart, uartOut, sizeof(uartOut));
                     curStatus->sensorTotal = 0;
                     curStatus->sensorCount = 0;
@@ -50,7 +51,8 @@ int StateMachine(status_t *curStatus, int timeInc, int sensorVal)
 
 
                     sprintf(uartOut,"Sensor= %d Count= %d  ",sensorAvg, curStatus->sensorCount);
-                    dbgUARTStr(uartOut);
+                    //dbgUARTStr(uartOut);
+                    dbgUARTStr("STATE 2 ");
                     curStatus->sensorTotal = 0;
                     curStatus->sensorCount = 0;
                     curStatus->curState = WaitingForTime3;
@@ -68,9 +70,10 @@ int StateMachine(status_t *curStatus, int timeInc, int sensorVal)
                     curStatus->curTime+=timeInc;
                     sensorAvg = curStatus->sensorTotal/curStatus->sensorCount;
                     sprintf(uartOut,"Sensor= %d Count= %d  ",sensorAvg, curStatus->sensorCount);
-                    dbgUARTStr(uartOut);
+                    //dbgUARTStr(uartOut);
                     sprintf(uartOut,"CurTime= %d", curStatus->curTime/100000);
-                    dbgUARTStr(uartOut);
+                    //dbgUARTStr(uartOut);
+                    dbgUARTStr("STATE 3 ");
                     curStatus->sensorTotal = 0;
                     curStatus->sensorCount = 0;
                     curStatus->curState = WaitingForTime1;

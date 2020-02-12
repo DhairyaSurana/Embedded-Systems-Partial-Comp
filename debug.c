@@ -88,23 +88,23 @@ void dbgOutputLoc(unsigned int outLoc){
         dbgHaltAll(DLOC_OVER127_ERROR);
     }
 
-    int binLoc[9] = {0};
+    int binLoc[8] = {0};
 
-        GPIO_write(Board_GPIO0, 1); // toggle
+        //GPIO_write(Board_GPIO8, 1); // toggle
         int_to_bin_digit(outLoc, 8, binLoc);
 
 
     //if(binLoc[0] == 1) {
-        GPIO_write(Board_GPIO1, binLoc[8]);
-        GPIO_write(Board_GPIO2, binLoc[7]);
-        GPIO_write(Board_GPIO3, binLoc[6]);
-        GPIO_write(Board_GPIO4, binLoc[5]);
-        GPIO_write(Board_GPIO5, binLoc[4]);
-        GPIO_write(Board_GPIO6, binLoc[3]);
-        GPIO_write(Board_GPIO7, binLoc[2]);
-        GPIO_write(Board_GPIO8, binLoc[1]);
+        GPIO_write(Board_GPIO0, binLoc[7]);
+        GPIO_write(Board_GPIO1, binLoc[6]);
+        GPIO_write(Board_GPIO2, binLoc[5]);
+        GPIO_write(Board_GPIO3, binLoc[4]);
+        GPIO_write(Board_GPIO4, binLoc[3]);
+        GPIO_write(Board_GPIO5, binLoc[2]);
+        GPIO_write(Board_GPIO6, binLoc[1]);
+        GPIO_write(Board_GPIO7, binLoc[0]);
 
-        GPIO_write(Board_GPIO0, 0);
+        GPIO_toggle(Board_GPIO8);
     //}
 
 
