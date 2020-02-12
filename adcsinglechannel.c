@@ -64,9 +64,10 @@ void vTask1 (void *pvParameters){
           ADC_init();
           GPIO_init();
           DebugGPIO_init();
+
           UART_init();
-          //initUART();
-          //IRSensor_init();
+          initUART();
+          IRSensor_init();
 
           dbgClearOut();
 
@@ -86,6 +87,10 @@ void vTask1 (void *pvParameters){
           while(1)
           {
 
+              //dbgUARTVal('A');
+              //dbgClearOut();
+              //dbgClearIn();
+              /*
               dbgOutputLoc(DLOC_BEFORE_QUEUE_READ);
               msg = readMsgFromQ1();
               dbgOutputLoc(DLOC_AFTER_QUEUE_READ);
@@ -94,7 +99,7 @@ void vTask1 (void *pvParameters){
               {
                   StateMachine(&status, msg.value.time_val, msg.value.sensor_val);
               }
-
+*/
           }
     }
 }

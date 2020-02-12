@@ -43,7 +43,6 @@ void TimerOne_init()
 
 void timerSecondCallback(Timer_Handle myHandle)
 {
-
     dbgOutputLoc(DLOC_ENTER_TIMERONE_ISR);
     uint32_t value = Timer_getCount(myHandle);
 

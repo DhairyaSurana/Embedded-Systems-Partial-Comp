@@ -35,18 +35,19 @@ void initUART()
     UART_Params uartParams;
     UART_Params_init(&uartParams);
 
-    uartParams.writeMode = UART_MODE_BLOCKING;
-    uartParams.readMode = UART_MODE_BLOCKING;
+    uartParams.writeMode = UART_DATA_BINARY;
+    uartParams.readMode = UART_DATA_BINARY;
     uartParams.writeDataMode = UART_DATA_BINARY;
         uartParams.readDataMode = UART_DATA_BINARY;
         uartParams.baudRate = 115200;
         uartParams.readEcho = UART_ECHO_OFF;
     uartParams.readReturnMode = UART_RETURN_FULL;
 
-    uart = UART_open(Board_UART0, &uartParams);
+    uart = UART_open(Board_UART1, &uartParams);
 
     if (uart == NULL){
-        dbgHaltAll(DLOC_UART_FAILED);
+        GPIO_write(Board_GPIO1, 1);
+        //dbgHaltAll(DLOC_UART_FAILED);
     }
 
 
@@ -89,8 +90,8 @@ void dbgOutputLoc(unsigned int outLoc){
 
     int binLoc[9] = {0};
 
-    GPIO_write(Board_GPIO0, 1); // toggle
-    int_to_bin_digit(outLoc, 8, binLoc);
+        GPIO_write(Board_GPIO0, 1); // toggle
+        int_to_bin_digit(outLoc, 8, binLoc);
 
 
     //if(binLoc[0] == 1) {
@@ -110,9 +111,30 @@ void dbgOutputLoc(unsigned int outLoc){
 
 }
 
+void dbgClearIn(){
+
+    //if(binLoc[0] == 1) {
+        GPIO_write(Board_GPIO0, 1);
+        GPIO_write(Board_GPIO1, 1);
+        GPIO_write(Board_GPIO2, 1);
+        GPIO_write(Board_GPIO3, 1);
+        GPIO_write(Board_GPIO4, 1);
+        GPIO_write(Board_GPIO5, 1);
+        GPIO_write(Board_GPIO6, 1);
+        GPIO_write(Board_GPIO7, 1);
+        GPIO_write(Board_GPIO8, 1);
+
+
+    //}
+
+
+
+}
+
 void dbgClearOut(){
 
     //if(binLoc[0] == 1) {
+        GPIO_write(Board_GPIO0, 0);
         GPIO_write(Board_GPIO1, 0);
         GPIO_write(Board_GPIO2, 0);
         GPIO_write(Board_GPIO3, 0);
@@ -122,7 +144,7 @@ void dbgClearOut(){
         GPIO_write(Board_GPIO7, 0);
         GPIO_write(Board_GPIO8, 0);
 
-        GPIO_write(Board_GPIO0, 0);
+
     //}
 
 

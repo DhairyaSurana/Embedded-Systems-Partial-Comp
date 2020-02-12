@@ -62,4 +62,6 @@ void DebugGPIO_init();
 
 void dbgUARTStr(char outVal[]);
 void dbgClearOut();
+void dbgClearIn();
+
 void dbgHaltAll(unsigned int outLoc);
