@@ -61,15 +61,6 @@ void dbgUARTVal(unsigned char outVal)
 }
 
 
-void dbgUARTStr(char outVal[])
-{
-
-    size_t length = strlen(outVal);
-    size_t i;
-    for(i = 0; i < length; i++) {
-        UART_write(uart, &outVal[i], sizeof(outVal[i]));
-    }
-}
 
 static void int_to_bin_digit(unsigned int in, int count, int* out)
 {

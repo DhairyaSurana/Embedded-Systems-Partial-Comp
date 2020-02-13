@@ -75,7 +75,7 @@ int convertToMM()
     }
     else
     {
-        return (int)range;
+        return (int)(range * 10);
     }
 }
 
