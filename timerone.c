@@ -46,9 +46,7 @@ void timerSecondCallback(Timer_Handle myHandle)
     dbgOutputLoc(DLOC_ENTER_TIMERONE_ISR);
     uint32_t value = Timer_getCount(myHandle);
 
-    //dbgOutputLoc(DLOC_TIMERONE_BEFORE_QUEUE);
     sendTimeMsgToQ1(value);
-    ///dbgOutputLoc(DLOC_TIMERONE_AFTER_QUEUE);
     dbgOutputLoc(DLOC_LEAVE_TIMERONE_ISR);
 
 }

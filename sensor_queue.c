@@ -14,16 +14,21 @@ void MQ_init()
     sensor = xQueueCreate(QUEUE_LEN, sizeof(message));
 }
 
-
-int sendToQueue(message m)
+bool sendToQueue(message m)
 {
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
     BaseType_t result = xQueueSendToBackFromISR(sensor,
                                                 &m, &xHigherPriorityTaskWoken);
-    return  (pdPASS == result);
+    bool success =  (pdPASS == result);
+    if(!success)
+    {
+        dbgHaltAll(DLOC_QUEUE_SEND_FAIL);
+    }
+    dbgOutputLoc(DLOC_QUEUE_SEND_SUCCESS);
+    return true;
 }
 
-int sendTimeMsgToQ1(unsigned int timeVal)
+bool sendTimeMsgToQ1(unsigned int timeVal)
 {
     dbgOutputLoc(DLOC_BEFORE_QUEUE_TIME);
     message m = {
@@ -32,12 +37,12 @@ int sendTimeMsgToQ1(unsigned int timeVal)
            .value.time_val=timeVal
     };
 
-    int check = sendToQueue(m);
-    dbgOutputLoc(DLOC_AFTER_QUEUE_TIME);
-    return check;
+    dbgOutputLoc(DLOC_QUEUE_SENDING_MSG);
+
+    return sendToQueue(m);
 }
 
-int sendSensorMsgToQ1(int mmDist)
+bool sendSensorMsgToQ1(int mmDist)
 {
     dbgOutputLoc(DLOC_BEFORE_QUEUE_SENSOR);
     message m = {
@@ -46,21 +51,20 @@ int sendSensorMsgToQ1(int mmDist)
          .value.time_val=0
     };
 
-    int check = sendToQueue(m);
-    dbgOutputLoc(DLOC_AFTER_QUEUE_SENSOR);
-    return check;
+    dbgOutputLoc(DLOC_QUEUE_SENDING_MSG);
+    return sendToQueue(m);
 }
 
 
 message readMsgFromQ1()
 {
-    dbgOutputLoc(DLOC_BEFORE_QUEUE_READ);
     message m = {
           .type=no_type,
           .value.sensor_val=0,
           .value.time_val=0
     };
 
+    dbgOutputLoc(DLOC_BEFORE_QUEUE_READ);
     xQueueReceive(sensor, &m, portMAX_DELAY);
     dbgOutputLoc(DLOC_AFTER_QUEUE_READ);
     return m;

@@ -19,7 +19,9 @@
 
 //Timer 2 activated (starts with 2)
 #define DLOC_ENTER_TIMERTWO_ISR         0x20
-#define DLOC_LEAVE_TIMERTWO_ISR         0x21
+#define DLOC_TIMERTWO_ADC_CONV_START    0x21
+#define DLOC_TIMERTWO_ADC_CONV_END      0x22
+#define DLOC_LEAVE_TIMERTWO_ISR         0x23
 
 //Queue (Starts with 3)
 #define DLOC_BEFORE_QUEUE_READ          0X30
@@ -28,6 +30,10 @@
 #define DLOC_AFTER_QUEUE_SENSOR         0X33
 #define DLOC_BEFORE_QUEUE_TIME          0X34
 #define DLOC_AFTER_QUEUE_TIME           0x35
+#define DLOC_QUEUE_SENDING_MSG          0x36
+#define DLOC_QUEUE_SEND_SUCCESS         0x37
+#define DLOC_QUEUE_SEND_FAIL            0x38
+
 
 //State Machine (Starts with 4)
 #define DLOC_STATE_INIT                 0x40
@@ -46,6 +52,7 @@
 #define DLOC_TIMERTWO_FAILED_START      0x64
 #define DLOC_TIMERTWO_ADC_FAILED        0x65
 
+
 #define DLOC_FATAL_ERROR                0x66
 #define DLOC_UART_FAILED                0x67
 #define DLOC_OVER127_ERROR              0x68
@@ -60,7 +67,6 @@ void dbgUARTVal(unsigned char outVal);
 void dbgOutputLoc(unsigned int outLoc);
 void DebugGPIO_init();
 
-void dbgUARTStr(char outVal[]);
 void dbgClearOut();
 void dbgClearIn();
 
