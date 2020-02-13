@@ -76,7 +76,8 @@ int convertToMM()
     }
     else
     {
-<<<<<<< HEAD
+
+
         return (int)(range * 10);
     }
 }
@@ -172,6 +173,9 @@ int convertToMM()
     else
     {
         return (int)range;
+=======
+        return (int)(range*10);
+>>>>>>> d681e82840c75d405d97c1bffcc14d730bef31e7
 =======
         return (int)(range*10);
 >>>>>>> d681e82840c75d405d97c1bffcc14d730bef31e7

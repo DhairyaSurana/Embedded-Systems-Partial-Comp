@@ -60,11 +60,14 @@ void dbgUARTVal(unsigned char outVal)
     UART_write(uart, &outVal, sizeof(outVal));
 }
 
-<<<<<<< HEAD
 
 
-=======
->>>>>>> d681e82840c75d405d97c1bffcc14d730bef31e7
+
+
+
+
+
+
 static void int_to_bin_digit(unsigned int in, int count, int* out)
 {
     unsigned int mask = 1U << (count-1);
@@ -88,6 +91,7 @@ void dbgOutputLoc(unsigned int outLoc)
     int_to_bin_digit(outLoc, 8, binLoc);
 
 
+
     GPIO_write(Board_GPIO0, binLoc[7]);
     GPIO_write(Board_GPIO1, binLoc[6]);
     GPIO_write(Board_GPIO2, binLoc[5]);
@@ -97,6 +101,21 @@ void dbgOutputLoc(unsigned int outLoc)
     GPIO_write(Board_GPIO6, binLoc[1]);
     GPIO_write(Board_GPIO7, binLoc[0]);
     GPIO_toggle(Board_GPIO8);
+
+
+
+    GPIO_write(Board_GPIO0, binLoc[7]);
+    GPIO_write(Board_GPIO1, binLoc[6]);
+    GPIO_write(Board_GPIO2, binLoc[5]);
+    GPIO_write(Board_GPIO3, binLoc[4]);
+    GPIO_write(Board_GPIO4, binLoc[3]);
+    GPIO_write(Board_GPIO5, binLoc[2]);
+    GPIO_write(Board_GPIO6, binLoc[1]);
+    GPIO_write(Board_GPIO7, binLoc[0]);
+    GPIO_toggle(Board_GPIO8);
+
+
+
 
 
 
