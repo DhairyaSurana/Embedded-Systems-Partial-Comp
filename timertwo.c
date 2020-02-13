@@ -21,12 +21,12 @@ void TimerTwo_init()
 
     if (TimerTwo == NULL)
     {
-        //dbgHaltAll(DLOC_TIMETWO_FAILED_INIT);
+        dbgHaltAll(DLOC_TIMETWO_FAILED_INIT);
     }
 
     if (Timer_start(TimerTwo) == Timer_STATUS_ERROR)
     {
-        //dbgHaltAll(DLOC_TIMERTWO_FAILED_START);
+        dbgHaltAll(DLOC_TIMERTWO_FAILED_START);
 
     }
 }
@@ -40,25 +40,26 @@ void IRSensor_init()
 
 void timer75Callback(Timer_Handle myHandle)
 {
-    //dbgOutputLoc(DLOC_ENTER_TIMERTWO_ISR);
+    dbgOutputLoc(DLOC_ENTER_TIMERTWO_ISR);
     int_fast16_t res;
 
+    dbgOutputLoc(DLOC_TIMERTWO_ADC_CONV_START);
     res = ADC_convert(adc, &adcValue0);
+    dbgOutputLoc(DLOC_TIMERTWO_ADC_CONV_END);
 
     if(res == ADC_STATUS_SUCCESS)
     {
-        //dbgOutputLoc(DLOC_TIMERTWO_ADC_SUCCESS);
         adcValue0MicroVolt = ADC_convertToMicroVolts(adc, adcValue0);
     }
     else
     {
-        //dbgOutputLoc(DLOC_TIMERTWO_ADC_FAILED);
+        dbgHaltAll(DLOC_TIMERTWO_ADC_FAILED);
     }
 
     int convertedValue = convertToMM();
     sendSensorMsgToQ1(convertedValue);
 
-    //dbgOutputLoc(DLOC_LEAVE_TIMERTWO_ISR);
+    dbgOutputLoc(DLOC_LEAVE_TIMERTWO_ISR);
 
 
 }
@@ -75,6 +76,7 @@ int convertToMM()
     }
     else
     {
+<<<<<<< HEAD
         return (int)(range * 10);
     }
 }
@@ -170,6 +172,8 @@ int convertToMM()
     else
     {
         return (int)range;
+=======
+        return (int)(range*10);
+>>>>>>> d681e82840c75d405d97c1bffcc14d730bef31e7
     }
 }
-*/

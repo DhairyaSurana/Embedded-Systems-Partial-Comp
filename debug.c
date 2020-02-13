@@ -35,19 +35,19 @@ void initUART()
     UART_Params uartParams;
     UART_Params_init(&uartParams);
 
-    uartParams.writeMode = UART_DATA_BINARY;
-    uartParams.readMode = UART_DATA_BINARY;
+//    uartParams.writeMode = UART_DATA_BINARY;
+//    uartParams.readMode = UART_DATA_BINARY;
     uartParams.writeDataMode = UART_DATA_BINARY;
-        uartParams.readDataMode = UART_DATA_BINARY;
-        uartParams.baudRate = 115200;
-        uartParams.readEcho = UART_ECHO_OFF;
+    uartParams.readDataMode = UART_DATA_BINARY;
+    uartParams.baudRate = 115200;
+    uartParams.readEcho = UART_ECHO_OFF;
     uartParams.readReturnMode = UART_RETURN_FULL;
 
     uart = UART_open(Board_UART1, &uartParams);
 
     if (uart == NULL){
         GPIO_write(Board_GPIO1, 1);
-        //dbgHaltAll(DLOC_UART_FAILED);
+        dbgHaltAll(DLOC_UART_FAILED);
     }
 
 
@@ -60,11 +60,13 @@ void dbgUARTVal(unsigned char outVal)
     UART_write(uart, &outVal, sizeof(outVal));
 }
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> d681e82840c75d405d97c1bffcc14d730bef31e7
 static void int_to_bin_digit(unsigned int in, int count, int* out)
 {
-    /* assert: count <= sizeof(int)*CHAR_BIT */
     unsigned int mask = 1U << (count-1);
     int i;
     for (i = 0; i < count; i++) {
@@ -73,75 +75,45 @@ static void int_to_bin_digit(unsigned int in, int count, int* out)
     }
 }
 
-void dbgOutputLoc(unsigned int outLoc){
-    if(outLoc>127){
-        //fail
+void dbgOutputLoc(unsigned int outLoc)
+{
+    if(outLoc>127)
+    {
         dbgHaltAll(DLOC_OVER127_ERROR);
+
     }
 
     int binLoc[8] = {0};
 
-        //GPIO_write(Board_GPIO8, 1); // toggle
-        int_to_bin_digit(outLoc, 8, binLoc);
+    int_to_bin_digit(outLoc, 8, binLoc);
 
 
-    //if(binLoc[0] == 1) {
-        GPIO_write(Board_GPIO0, binLoc[7]);
-        GPIO_write(Board_GPIO1, binLoc[6]);
-        GPIO_write(Board_GPIO2, binLoc[5]);
-        GPIO_write(Board_GPIO3, binLoc[4]);
-        GPIO_write(Board_GPIO4, binLoc[3]);
-        GPIO_write(Board_GPIO5, binLoc[2]);
-        GPIO_write(Board_GPIO6, binLoc[1]);
-        GPIO_write(Board_GPIO7, binLoc[0]);
-
-        GPIO_toggle(Board_GPIO8);
-    //}
+    GPIO_write(Board_GPIO0, binLoc[7]);
+    GPIO_write(Board_GPIO1, binLoc[6]);
+    GPIO_write(Board_GPIO2, binLoc[5]);
+    GPIO_write(Board_GPIO3, binLoc[4]);
+    GPIO_write(Board_GPIO4, binLoc[3]);
+    GPIO_write(Board_GPIO5, binLoc[2]);
+    GPIO_write(Board_GPIO6, binLoc[1]);
+    GPIO_write(Board_GPIO7, binLoc[0]);
+    GPIO_toggle(Board_GPIO8);
 
 
 
-}
-
-void dbgClearIn(){
-
-    //if(binLoc[0] == 1) {
-        GPIO_write(Board_GPIO0, 1);
-        GPIO_write(Board_GPIO1, 1);
-        GPIO_write(Board_GPIO2, 1);
-        GPIO_write(Board_GPIO3, 1);
-        GPIO_write(Board_GPIO4, 1);
-        GPIO_write(Board_GPIO5, 1);
-        GPIO_write(Board_GPIO6, 1);
-        GPIO_write(Board_GPIO7, 1);
-        GPIO_write(Board_GPIO8, 1);
-
-
-    //}
-
+    //better output scheme, only need one digiview cable in total (9 ports), but requires rewiring
+    /*
+    GPIO_write(Board_GPIO0, binLoc[7]);
+    GPIO_write(Board_GPIO1, binLoc[6]);
+    GPIO_write(Board_GPIO2, binLoc[5]);
+    GPIO_write(Board_GPIO3, binLoc[4]);
+    GPIO_write(Board_GPIO4, binLoc[3]);
+    GPIO_write(Board_GPIO5, binLoc[2]);
+    GPIO_write(Board_GPIO6, binLoc[1]);
+    GPIO_toggle(Board_GPIO7);
+     */
 
 
 }
-
-void dbgClearOut(){
-
-    //if(binLoc[0] == 1) {
-        GPIO_write(Board_GPIO0, 0);
-        GPIO_write(Board_GPIO1, 0);
-        GPIO_write(Board_GPIO2, 0);
-        GPIO_write(Board_GPIO3, 0);
-        GPIO_write(Board_GPIO4, 0);
-        GPIO_write(Board_GPIO5, 0);
-        GPIO_write(Board_GPIO6, 0);
-        GPIO_write(Board_GPIO7, 0);
-        GPIO_write(Board_GPIO8, 0);
-
-
-    //}
-
-
-
-}
-
 
 
 void DebugGPIO_init() {

@@ -8,6 +8,8 @@
  */
 #include <stdint.h>
 #include <stddef.h>
+#include <stdbool.h>
+
 
 /* POSIX Header files */
 #include <pthread.h>
@@ -54,54 +56,59 @@
 
 void vTask1 (void *pvParameters){
 
- const char *pcTaskName = "Task 1";
-    volatile uint32_t u1;
-
     for(;;){
-       //everything that was in the main goes here
 
-          MQ_init();
-          ADC_init();
-          GPIO_init();
-          DebugGPIO_init();
+        MQ_init();
+        ADC_init();
+        GPIO_init();
+        DebugGPIO_init();
 
-          UART_init();
-          initUART();
-          IRSensor_init();
-
-          dbgClearOut();
-
-          Timer_init();
-          TimerOne_init();
-          TimerTwo_init();
-
-          status_t status;
-          status_init(&status);
-
-          message msg;
-          message_init(&msg);
-
-          dbgOutputLoc(DLOC_BEFORE_WHILE);
+        UART_init();
+        initUART();
+        IRSensor_init();
 
 
-          while(1)
-          {
+        Timer_init();
+        TimerOne_init();
+        TimerTwo_init();
 
-              //dbgUARTStr("HEllo");
-              //dbgClearOut();
-              //dbgClearIn();
+        status_t status;
+        status_init(&status);
 
-              dbgOutputLoc(DLOC_BEFORE_QUEUE_READ);
-              msg = readMsgFromQ1();
-              dbgOutputLoc(DLOC_AFTER_QUEUE_READ);
+        message msg;
+        message_init(&msg);
 
-              if(msg.type != no_type)
-              {
-                  StateMachine(&status, msg.value.time_val, msg.value.sensor_val);
-              }
+        dbgOutputLoc(DLOC_BEFORE_WHILE);
 
-          }
+        int fail = 0;//set fail to value 1 or greater to activate fail
+
+
+        while(1)
+        {
+            dbgOutputLoc(DLOC_BEFORE_QUEUE_READ);
+            msg = readMsgFromQ1();
+            dbgOutputLoc(DLOC_AFTER_QUEUE_READ);
+
+            if(msg.type != no_type)
+            {
+                StateMachine(&status, msg.value.time_val, msg.value.sensor_val);
+            }
+
+            if(fail > 0)
+            {
+                if(fail < 50)//fails after specified loops
+                {
+                    fail = fail+1;
+                }
+                else
+                {
+                    dbgHaltAll(DLOC_FATAL_ERROR);
+                }
+            }
+        }
     }
+
+
 }
 
 void *mainThread(void *arg0)
@@ -111,5 +118,5 @@ void *mainThread(void *arg0)
 
     vTaskStartScheduler();
 
-
+    return(NULL);
 }

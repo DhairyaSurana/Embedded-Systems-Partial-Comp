@@ -1,6 +1,8 @@
 #include "sensor_state.h"
 #include "debug.h"
 #include <stdio.h>
+#include <strings.h>
+
 
 
 //REPLACE UART_write with dbgUARTVal
@@ -29,9 +31,11 @@ int StateMachine(status_t *curStatus, int timeInc, int sensorVal)
 
 
                     sprintf(uartOut,"Sensor= %d Count= %d  ",sensorAvg, curStatus->sensorCount);
-                    dbgUARTStr(uartOut);
-                    //dbgUARTStr("STATE 1 ");
-                    //UART_write(uart, uartOut, sizeof(uartOut));
+                    int i = 0;
+                    for (i = 0; i < strlen(uartOut); i++)
+                    {
+                        dbgUARTVal(uartOut[i]);
+                    }
                     curStatus->sensorTotal = 0;
                     curStatus->sensorCount = 0;
                     curStatus->curState = WaitingForTime2;
@@ -51,8 +55,11 @@ int StateMachine(status_t *curStatus, int timeInc, int sensorVal)
 
 
                     sprintf(uartOut,"Sensor= %d Count= %d  ",sensorAvg, curStatus->sensorCount);
-                    dbgUARTStr(uartOut);
-                    //dbgUARTStr("STATE 2 ");
+                    int i = 0;
+                    for (i = 0; i < strlen(uartOut); i++)
+                    {
+                        dbgUARTVal(uartOut[i]);
+                    }
                     curStatus->sensorTotal = 0;
                     curStatus->sensorCount = 0;
                     curStatus->curState = WaitingForTime3;
@@ -70,10 +77,18 @@ int StateMachine(status_t *curStatus, int timeInc, int sensorVal)
                     curStatus->curTime+=timeInc;
                     sensorAvg = curStatus->sensorTotal/curStatus->sensorCount;
                     sprintf(uartOut,"Sensor= %d Count= %d  ",sensorAvg, curStatus->sensorCount);
-                    dbgUARTStr(uartOut);
-                    sprintf(uartOut,"CurTime= %d", curStatus->curTime/100000);
-                    dbgUARTStr(uartOut);
-                    //dbgUARTStr("STATE 3 ");
+                    int i = 0;
+                    for (i = 0; i < strlen(uartOut); i++)
+                    {
+                        dbgUARTVal(uartOut[i]);
+
+                    }
+                    sprintf(uartOut,"CurTime= %d ", curStatus->curTime/1000);
+                    i = 0;
+                    for (i = 0; i < strlen(uartOut); i++)
+                    {
+                        dbgUARTVal(uartOut[i]);
+                    }
                     curStatus->sensorTotal = 0;
                     curStatus->sensorCount = 0;
                     curStatus->curState = WaitingForTime1;

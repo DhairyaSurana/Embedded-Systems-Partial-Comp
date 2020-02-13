@@ -4,6 +4,7 @@
 #include <FreeRTOS.h>
 #include <queue.h>
 #include "debug.h"
+#include <stdbool.h>
 
 #define QUEUE_LEN       120
 #define QUEUE_ITEM_SIZE 8
@@ -27,11 +28,11 @@ void message_init(message *msg);
 
 void MQ_init();
 
-int sendToQueue(message m);
+bool sendToQueue(message m);
 
-int sendTimeMsgToQ1(unsigned int timeVal);
+bool sendTimeMsgToQ1(unsigned int timeVal);
 
-int sendSensorMsgToQ1(int mmDist);
+bool sendSensorMsgToQ1(int mmDist);
 
 message readMsgFromQ1();
 
