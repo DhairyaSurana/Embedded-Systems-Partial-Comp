@@ -1,4 +1,3 @@
-//tesst2
 #include "Board.h"
 #include "timerone.h"
 #include "timertwo.h"
@@ -13,7 +12,6 @@
 #include <ti/devices/cc32xx/inc/hw_memmap.h>
 #include <ti/devices/cc32xx/inc/hw_gpio.h>
 
-//#include "string.h"
 void dbgHaltAll(unsigned int outLoc){
     dbgOutputLoc(outLoc);
 
@@ -59,13 +57,6 @@ void dbgUARTVal(unsigned char outVal)
 {
     UART_write(uart, &outVal, sizeof(outVal));
 }
-
-
-
-
-
-
-
 
 
 static void int_to_bin_digit(unsigned int in, int count, int* out)

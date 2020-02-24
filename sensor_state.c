@@ -4,9 +4,6 @@
 #include <strings.h>
 
 
-
-//REPLACE UART_write with dbgUARTVal
-
 int StateMachine(status_t *curStatus, int timeInc, int sensorVal)
 {
     int sensorAvg;
@@ -106,10 +103,8 @@ int StateMachine(status_t *curStatus, int timeInc, int sensorVal)
 
 void status_init(status_t *state)
 {
-    (*state).curState = Init;
-    (*state).curTime = 0;
-    (*state).sensorCount = 0;
-    (*state).sensorTotal = 0;
-
-
+     state->curState = Init;
+     state->curTime = 0;
+     state->sensorCount = 0;
+     state->sensorTotal = 0;
 }

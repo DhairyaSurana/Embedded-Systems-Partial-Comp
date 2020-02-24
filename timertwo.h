@@ -1,10 +1,3 @@
-/*
- * timertwo.h
- *
- *  Created on: Feb 5, 2020
- *      Author: Brandon
- */
-
 #ifndef TIMERTWO_H_
 #define TIMERTWO_H_
 

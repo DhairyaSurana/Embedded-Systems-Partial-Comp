@@ -1,14 +1,13 @@
 #include "sensor_queue.h"
 
-// testing 1 2 3
 
 void message_init(message *msg)
 {
-    (*msg).type = no_type;
-    (*msg).value.sensor_val = ZERO;
-    (*msg).value.time_val = ZERO;
-
+    msg->type = no_type;
+    msg->value.sensor_val = ZERO;
+    msg->value.time_val = ZERO;
 }
+
 void MQ_init()
 {
     sensor = xQueueCreate(QUEUE_LEN, sizeof(message));

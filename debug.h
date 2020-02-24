@@ -1,14 +1,6 @@
 #include <ti/drivers/GPIO.h>
 #include <ti/drivers/UART.h>
 
-//#include <stdint.h>
-//#include <stdbool.h>
-//#include <stddef.h>
-//#include <stdlib.h>
-//
-////#include "system_config/default/system_config.h"
-//#include "system_config/default/system_definitions.h"
-
 //Initialization
 #define DLOC_ENTER_TASK                 0x01
 #define DLOC_BEFORE_WHILE               0X02
@@ -56,8 +48,6 @@
 #define DLOC_FATAL_ERROR                0x66
 #define DLOC_UART_FAILED                0x67
 #define DLOC_OVER127_ERROR              0x68
-
-
 
 
 UART_Handle uart;

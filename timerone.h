@@ -1,10 +1,3 @@
-/*
- * timerone.h
- *
- *  Created on: Feb 5, 2020
- *      Author: Brandon
- */
-
 #ifndef TIMERONE_H_
 #define TIMERONE_H_
 

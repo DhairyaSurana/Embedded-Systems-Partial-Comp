@@ -1,19 +1,9 @@
-/*
- * timerone.c
- *
- *  Created on: Feb 5, 2020
- *      Author: Brandon
- */
-
 #include "timerone.h"
-
 #include <stddef.h>
 
-/* Driver Header files */
 #include <ti/drivers/GPIO.h>
 #include <ti/drivers/Timer.h>
 
-/* Board Header file */
 #include "Board.h"
 
 void TimerOne_init()
@@ -29,14 +19,12 @@ void TimerOne_init()
    TimerOne = Timer_open(Board_TIMER0, &params);
 
     if (TimerOne == NULL)
-    {
         dbgHaltAll(DLOC_TIMERONE_FAILED_INIT);
-    }
+
 
     if (Timer_start(TimerOne) == Timer_STATUS_ERROR)
-    {
         dbgHaltAll(DLOC_TIMERONE_FAILED_START);
-    }
+
 
 
 }

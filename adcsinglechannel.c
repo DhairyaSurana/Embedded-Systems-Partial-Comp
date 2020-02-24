@@ -1,11 +1,3 @@
-/*
- *
- * MODIFIED FROM:
- * adcsinglechannel.c
- *
- *  Created on: Feb 5, 2020
- *  Author: Brandon
- */
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
@@ -44,16 +36,6 @@
  */
 
 
-
-//========================================================================================
-// IMPORTANT DEBUG INFO
-//
-//  dbgOutputLoc relies on GPIO_init and DebugGPIO_init
-//
-//  dbgUARTStr relies on Timer_init, TimerOne_init, and TimerTwo_init
-//========================================================================================
-
-
 void vTask1 (void *pvParameters){
 
     for(;;){
@@ -90,20 +72,15 @@ void vTask1 (void *pvParameters){
             dbgOutputLoc(DLOC_AFTER_QUEUE_READ);
 
             if(msg.type != no_type)
-            {
                 StateMachine(&status, msg.value.time_val, msg.value.sensor_val);
-            }
 
-            if(fail > 0)
-            {
+            if(fail > 0) {
+
                 if(fail < 50)//fails after specified loops
-                {
                     fail = fail+1;
-                }
                 else
-                {
                     dbgHaltAll(DLOC_FATAL_ERROR);
-                }
+
             }
         }
     }
@@ -115,7 +92,6 @@ void *mainThread(void *arg0)
 {
 
     xTaskCreate(vTask1, "Task1", 1000, NULL, 1, NULL);
-
     vTaskStartScheduler();
 
     return(NULL);
