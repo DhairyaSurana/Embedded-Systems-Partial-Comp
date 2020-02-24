@@ -54,5 +54,5 @@ int convertToMM()
     range = pow(range, -1.15);
     range = 10.16*range;
 
-    return (range < 0) ? 0 : (int)(range * 10)
+    return (range < 0) ? 0 : (int)(range * 10);
 }
