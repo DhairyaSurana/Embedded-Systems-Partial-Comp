@@ -22,7 +22,7 @@ var GPIO6 = GPIO.addInstance();
 var GPIO7 = GPIO.addInstance();
 var GPIO8 = GPIO.addInstance();
 var GPIO9 = GPIO.addInstance();
-var UART2 = UART.addInstance();
+var UART1 = UART.addInstance();
 // Name - The C/C++ identifier used in applications as the index parameter passed to ADC runtime APIs
 ADC1.$name = "Board_ADC0";
 // Name
@@ -43,6 +43,8 @@ var Power = scripting.addModule("/ti/drivers/Power", {}, false);
 Power.parkPins.$name = "ti_drivers_power_PowerCC32XXPins0";
 // Name
 Display1.uart.uart.$name = "MyUART1";
+// Assign pin (ignoring conflicts)
+Display1.uart.uart.txPin.$assignAllowConflicts = "GP01"; // pin number - 55
 // Name - The C/C++ identifier used in applications as the index parameter passed to Timer runtime APIs
 Timer1.$name = "Board_TIMER0";
 // Timer Type
@@ -98,22 +100,22 @@ GPIO9.mode = "Output";
 // Assign pin
 GPIO9.gpioPin.$assign = "boosterpack.27"; // P63
 // Name - The C/C++ identifier used in applications as the index parameter passed to UART runtime APIs
-UART2.$name = "Board_UART1";
+UART1.$name = "Board_UART1";
 // Data Direction
-UART2.dataDirection = "Send Only";
+UART1.dataDirection = "Send Only";
+// Use Hardware - Select the hardware to use, or 'None' to use available header pins
+UART1.$hardware = system.deviceData.board.components.xds110Uart;
 // Name
-UART2.uart.$name = "MyUART1";
-// Use Peripheral
-UART2.uart.$assign = "UART0";
-// Assign pin
-UART2.uart.txPin.$assign = "boosterpack.4"; // P03
+UART1.uart.$name = "MyUART1";
+// Assign pin (ignoring conflicts)
+UART1.uart.txPin.$assignAllowConflicts = "GP01"; // pin number - 55
 // Suggest solution
 ADC1.adc.$suggestSolution = "ADC0";
 // Suggest solution
-Display1.uart.uart.$suggestSolution = "UART1";
-// Suggest solution
-Display1.uart.uart.txPin.$suggestSolution = "55";
+Display1.uart.uart.$suggestSolution = "UART0";
 // Suggest solution
 Timer1.timer.$suggestSolution = "Timer1";
 // Suggest solution
 Timer2.timer.$suggestSolution = "Timer0";
+// Suggest solution
+UART1.uart.$suggestSolution = "UART1";

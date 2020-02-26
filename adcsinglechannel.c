@@ -22,6 +22,8 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+#include <strings.h>
+
 // include all of our header files
 
 
@@ -63,7 +65,6 @@ void vTask1 (void *pvParameters){
         dbgOutputLoc(DLOC_BEFORE_WHILE);
 
         int fail = 0;//set fail to value 1 or greater to activate fail
-
 
         while(1)
         {
