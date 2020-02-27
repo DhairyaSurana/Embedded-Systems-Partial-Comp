@@ -18,6 +18,7 @@
 #include "sensor_state.h"
 #include "sensor_queue.h"
 #include "debug.h"
+#include "pwm_ultrasonic.h"
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -50,6 +51,7 @@ void vTask1 (void *pvParameters){
         UART_init();
         initUART();
         IRSensor_init();
+        init_pwm();
 
 
         Timer_init();
