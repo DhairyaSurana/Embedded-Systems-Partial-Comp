@@ -3,19 +3,42 @@
 #include <stdio.h>
 #include <strings.h>
 
+static void printTimeInfo(char * uart, int time) {
+
+    sprintf(uart, "CurTime = %d ", time);
+
+    int i;
+    for (i = 0; i < strlen(uart); i++)
+        dbgUARTVal(uart[i]);
+}
+
+static void printSensorInfo(char * uart, int avg, int count) {
+
+    sprintf(uart, "(Sensor = %d, Count = %d) ", avg, count);
+
+    int i;
+    for (i = 0; i < strlen(uart); i++)
+        dbgUARTVal(uart[i]);
+
+}
 
 int StateMachine(status_t *curStatus, int timeInc, int sensorVal)
 {
     int sensorAvg;
-    char uartOut[33];
+    char uartOut[33] = "";
     switch (curStatus->curState) {
+
             case Init:
+
                 dbgOutputLoc(DLOC_STATE_INIT);
                 curStatus->curTime = 0;
                 curStatus->curState = WaitingForTime1;
                 break;
+
             case WaitingForTime1:
+
                 dbgOutputLoc(DLOC_STATE_ONE);
+
                 if(timeInc == 0)
                 {
                     curStatus->sensorTotal += sensorVal;
@@ -23,75 +46,68 @@ int StateMachine(status_t *curStatus, int timeInc, int sensorVal)
                 }
 
                 if(timeInc>0){
+
                     curStatus->curTime+=timeInc;
                     sensorAvg = curStatus->sensorTotal/curStatus->sensorCount;
 
+                    printSensorInfo(uartOut, sensorAvg, curStatus->sensorCount);
 
-                    sprintf(uartOut,"Sensor= %d Count= %d  ",sensorAvg, curStatus->sensorCount);
-                    int i = 0;
-                    for (i = 0; i < strlen(uartOut); i++)
-                    {
-                        dbgUARTVal(uartOut[i]);
-                    }
                     curStatus->sensorTotal = 0;
                     curStatus->sensorCount = 0;
                     curStatus->curState = WaitingForTime2;
                 }
+
                 break;
+
             case WaitingForTime2:
+
                 dbgOutputLoc(DLOC_STATE_TWO);
-                if(timeInc == 0)
-                {
+
+                if(timeInc == 0) {
+
                     curStatus->sensorTotal += sensorVal;
                     curStatus->sensorCount++;
                 }
 
                 if(timeInc>0){
+
                     curStatus->curTime+=timeInc;
                     sensorAvg = curStatus->sensorTotal/curStatus->sensorCount;
 
+                    printSensorInfo(uartOut, sensorAvg, curStatus->sensorCount);
 
-                    sprintf(uartOut,"Sensor= %d Count= %d  ",sensorAvg, curStatus->sensorCount);
-                    int i = 0;
-                    for (i = 0; i < strlen(uartOut); i++)
-                    {
-                        dbgUARTVal(uartOut[i]);
-                    }
                     curStatus->sensorTotal = 0;
                     curStatus->sensorCount = 0;
                     curStatus->curState = WaitingForTime3;
                 }
+
                 break;
+
             case WaitingForTime3:
+
                 dbgOutputLoc(DLOC_STATE_THREE);
-                if(timeInc == 0)
-                {
+
+                if(timeInc == 0){
                     curStatus->sensorTotal += sensorVal;
                     curStatus->sensorCount++;
                 }
 
                 if(timeInc>0){
+
                     curStatus->curTime+=timeInc;
                     sensorAvg = curStatus->sensorTotal/curStatus->sensorCount;
-                    sprintf(uartOut,"Sensor= %d Count= %d  ",sensorAvg, curStatus->sensorCount);
-                    int i = 0;
-                    for (i = 0; i < strlen(uartOut); i++)
-                    {
-                        dbgUARTVal(uartOut[i]);
 
-                    }
-                    sprintf(uartOut,"CurTime= %d ", curStatus->curTime/1000);
-                    i = 0;
-                    for (i = 0; i < strlen(uartOut); i++)
-                    {
-                        dbgUARTVal(uartOut[i]);
-                    }
+                    printSensorInfo(uartOut, sensorAvg, curStatus->sensorCount);
+                    printTimeInfo(uartOut, curStatus->curTime/1000);
+
                     curStatus->sensorTotal = 0;
                     curStatus->sensorCount = 0;
                     curStatus->curState = WaitingForTime1;
                 }
+
                 break;
-              default:
+
+            default:
                 return 0;//fail
     }
 
