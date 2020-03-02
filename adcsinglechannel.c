@@ -43,18 +43,17 @@ void vTask1 (void *pvParameters){
 
     for(;;){
 
-        MQ_init();
         ADC_init();
         GPIO_init();
-        DebugGPIO_init();
-
         UART_init();
+        Timer_init();
+
+        MQ_init();
+        DebugGPIO_init();
         initUART();
         IRSensor_init();
         init_pwm();
 
-
-        Timer_init();
         TimerOne_init();
         TimerTwo_init();
 
@@ -68,8 +67,8 @@ void vTask1 (void *pvParameters){
 
         int fail = 0;//set fail to value 1 or greater to activate fail
 
-        while(1)
-        {
+        while(1){
+
             dbgOutputLoc(DLOC_BEFORE_QUEUE_READ);
             msg = readMsgFromQ1();
             dbgOutputLoc(DLOC_AFTER_QUEUE_READ);
@@ -80,7 +79,7 @@ void vTask1 (void *pvParameters){
             if(fail > 0) {
 
                 if(fail < 50)//fails after specified loops
-                    fail = fail+1;
+                    fail++;
                 else
                     dbgHaltAll(DLOC_FATAL_ERROR);
 

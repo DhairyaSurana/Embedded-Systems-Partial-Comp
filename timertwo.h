@@ -23,15 +23,25 @@
 #define RANGE_V_OFFSET      5
 #define RANGE_OFFSET        1
 
-
 Timer_Handle TimerTwo;
+
+/* conversion result variables */
+uint16_t adcValue0;
+uint32_t adcValue0MicroVolt;
+uint32_t duration;
+uint32_t timerCountPrev;
+uint32_t timerCountNow;
+
+static bool trigMode = true;
+static bool clearTrig = true;
+
 void TimerTwo_init();
 
 ADC_Handle adc;
 uint16_t adcValue0;
 uint32_t adcValue0MicroVolt;
 void IRSensor_init();
-
+void timer10Callback(Timer_Handle timerHandle);
 void timer75Callback(Timer_Handle myHandle);
 
 int convertToMM();

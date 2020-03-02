@@ -26,6 +26,29 @@ void IRSensor_init()
     adc = ADC_open(Board_ADC0, &adcParams);
 }
 
+void timer10Callback(Timer_Handle myHandle) {
+
+    GPIO_write(Board_GPIO8, 1);
+    GPIO_write(Board_GPIO8, 0);
+
+    while(GPIO_read(Board_GPIO9) == 0)
+    {
+       timerCountPrev = Timer_getCount(myHandle);
+    }
+    while((GPIO_read(Board_GPIO9) == 1))
+    {
+       timerCountNow = Timer_getCount(myHandle);
+    }
+
+    duration = timerCountNow - timerCountPrev;
+
+    int convertedValue = convertToMM();
+    sendSensorMsgToQ1(convertedValue);
+
+    dbgOutputLoc(DLOC_LEAVE_TIMERTWO_ISR);
+
+}
+
 void timer75Callback(Timer_Handle myHandle)
 {
     dbgOutputLoc(DLOC_ENTER_TIMERTWO_ISR);
@@ -40,10 +63,10 @@ void timer75Callback(Timer_Handle myHandle)
     else
         dbgHaltAll(DLOC_TIMERTWO_ADC_FAILED);
 
-    int convertedValue = convertToMM();
-    sendSensorMsgToQ1(convertedValue);
+      int convertedValue = convertToMM();
+      sendSensorMsgToQ1(convertedValue);
 
-    dbgOutputLoc(DLOC_LEAVE_TIMERTWO_ISR);
+      dbgOutputLoc(DLOC_LEAVE_TIMERTWO_ISR);
 
 }
 
