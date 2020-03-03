@@ -49,64 +49,53 @@
 /* Example/Board Header files */
 #include "Board.h"
 
-//team written headers
 #include "sensor_queue.h"
 #include "sensor_state.h"
-//#include "debug.h"
+
 #include "timerone.h"
 #include "timertwo.h"
-//#include "pwm_ultrasonic.h"
 
-UART_Handle uart;
 
 /*
  *  ======== mainThread ========
  */
-void *mainThread(void *arg0)
-{
+void vMainTask (void *pvParameters){
+
     initMessageQueue();
-    //ADC_init();
+
     GPIO_init();
     UART_init();
     initSharpIRSensor();
     initUART();
-    //init_pwm();
-    //perfect mqtt
-    //initDebugGPIO();
-
-    //dbgOutputLoc(MAIN_TASK_DLOC_ENTER_TASK);
 
     sensor_struct state;
     sensorStructInit(&state);
 
-    data_struct received = {.type=no_data, .value.sensor_val=0,
+    data_struct sens_msg = {.type=no_data, .value.sensor_val=0,
                             .value.time_val=0, .direction=""};
-    /* Call driver init functions */
+
+
     Timer_init();
     initTimerOne();
     initTimerTwo();
 
-    //dbgOutputLoc(MAIN_TASK_DLOC_BEFORE_WHILE);
-    int count = 0;
-    int sensorVal[10];
-    int avg =0;
+
     while (1)
     {
-        received = readMsgFromQ1();
-        if (received.type != no_data)
-        {
-            FSM(&state, received.value.time_val, received.value.sensor_val, received.direction);
-            sensorVal[count] = received.value.sensor_val;
-            count++;
-        }
-        if(count == 10)
-        {
-            avg = (sensorVal[0] + sensorVal[1] + sensorVal[2] + sensorVal[3] + sensorVal[4] + sensorVal[5] + sensorVal[6] + sensorVal[7] + sensorVal[8] + sensorVal[9]);
-            avg = avg/10;
-            count = 0;
-            avg = 0;
-            //UART_write(uart, atoi(&sensorVal), sizeof(atoi(sensorVal)));
-            //send
-        }
+
+        sens_msg = readMsgFromQ1();
+
+        if (sens_msg.type != no_data)
+            FSM(&state, sens_msg.value.time_val, sens_msg.value.sensor_val, sens_msg.direction);
+
     }
+}
+
+
+void *mainThread(void *arg0){
+
+    xTaskCreate(vMainTask, "MainTask", 1000, NULL, 1, NULL);
+    vTaskStartScheduler();
+
+    return(NULL);
 }
