@@ -1,49 +1,67 @@
+
 #ifndef TIMERTWO_H_
 #define TIMERTWO_H_
 
+/* STD Header Files*/
 #include <stddef.h>
 #include <stdint.h>
 #include <math.h>
 
-#include <ti/drivers/Timer.h>
+/* POSIX Header files */
+#include <pthread.h>
+
+/* Driver Header files */
 #include <ti/drivers/ADC.h>
+#include <ti/drivers/Timer.h>
+#include <ti/drivers/GPIO.h>
 
+/* Board Header file */
 #include "Board.h"
-#include "debug.h"
+
+/* User Header Files*/
+//#include "debug.h"
 #include "sensor_queue.h"
-// include debug and queue headers
 
-// Define constants
-#define TIMERTWO_PERIOD     75000
+/*ADC microvolt to mm conversion constants*/
+#define DISTANCE_CONVERSION 1000000
+#define POWER_NUMBER -1.15
+#define DISTANCE_FACTOR 27.86
+#define ZERO_0 0
+#define NEGATIVE_ONE -1
+#define TIMER2_PERIOD 100000
+#define TWO 2
+#define CONVERSION_FACTOR 29.1
 
-#define ZERO                0
-#define INVALID_MEASUREMENT -1
-#define MV_V_FACTOR         1000000
-#define RANGE_NUMERATOR     2914
-#define RANGE_V_OFFSET      5
-#define RANGE_OFFSET        1
+/* Handles */
+Timer_Handle timer2;
+ADC_Handle adc;
 
-Timer_Handle TimerTwo;
+/* ADC sample count */
+#define ADC_SAMPLE_COUNT  (10)
+#define THREADSTACKSIZE   (768)
 
 /* conversion result variables */
 uint16_t adcValue0;
 uint32_t adcValue0MicroVolt;
-uint32_t duration;
-uint32_t timerCountPrev;
-uint32_t timerCountNow;
+//uint32_t duration;
+uint32_t timerLeftCountPrev;
+uint32_t timerLeftCountNow;
+uint32_t timerRightCountPrev;
+uint32_t timerRightCountNow;
 
+//int distance;
 static bool trigMode = true;
 static bool clearTrig = true;
-
-void TimerTwo_init();
-
-ADC_Handle adc;
-uint16_t adcValue0;
-uint32_t adcValue0MicroVolt;
-void IRSensor_init();
+/*Sends to queue with the amount of time passed since the last callback */
 void timer10Callback(Timer_Handle timerHandle);
-void timer75Callback(Timer_Handle myHandle);
+/*edge triggered callback for sensor*/
+void sensorLeftCallback(Timer_Handle timerHandle);
+void sensorRightCallback(Timer_Handle timerHandle);
+/*Converts sensor reading value into distance in mm*/
+int convertIntoCM(uint32_t duration);
+/*Initializes timer two which has a period of 65 milliseconds */
+void initTimerTwo();
 
-int convertToMM();
+void initSharpIRSensor();
 
 #endif /* TIMERTWO_H_ */

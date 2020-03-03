@@ -1,21 +1,27 @@
+
 #ifndef TIMERONE_H_
 #define TIMERONE_H_
 
+/*STD C Lib Headers*/
 #include <stddef.h>
 
+/*User Header Files*/
+//#include "debug.h"
+#include "sensor_queue.h"
+
+/* Driver Header Files */
 #include <ti/drivers/Timer.h>
 
+/* Board Header File */
 #include "Board.h"
-#include "debug.h"
-#include "sensor_queue.h"
-// include debug and queue headers
 
-#define TIMERONE_PERIOD     1000000
+#define TIMER1_PERIOD 250000
 
-void TimerOne_init();
-
-Timer_Handle TimerOne;
-void timerSecondCallback(Timer_Handle myHandle);
-
+/*Global Timer Handle*/
+Timer_Handle timer1;
+/*Sends out time when call back function is called to queue.*/
+void timerQuarterCallback(Timer_Handle timerHandle);
+/*Initalizes timer one.*/ 
+void initTimerOne();
 
 #endif /* TIMERONE_H_ */

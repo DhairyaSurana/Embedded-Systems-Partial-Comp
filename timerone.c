@@ -1,40 +1,37 @@
+
 #include "timerone.h"
-#include <stddef.h>
 
-#include <ti/drivers/GPIO.h>
-#include <ti/drivers/Timer.h>
-
-#include "Board.h"
-
-void TimerOne_init()
+void timerQuarterCallback(Timer_Handle timerHandle)
 {
-    Timer_Params params;
-    Timer_Params_init(&params);
+    //dbgOutputLoc(MAIN_TASK_DLOC_ENTER_TIMERONE_ISR);
+    //dbgOutputLoc(MAIN_TASK_DLOC_BEFORE_COMM_WITH_QUEUE_IN_TIMERONE_ISR);
+    uint32_t timerCount = Timer_getCount(timerHandle);
+    sendTimeMsgToQ1(timerCount);
+    //dbgOutputLoc(MAIN_TASK_DLOC_LEAVE_TIMERONE_ISR);
+    //dbgOutputLoc(MAIN_TASK_DLOC_AFTER_COMM_WITH_QUEUE_IN_TIMERONE_ISR);
+} /*Sends out time when call back function is called to queue.*/
 
-    params.period = TIMERONE_PERIOD;
-    params.periodUnits = Timer_PERIOD_US;
-    params.timerMode = Timer_CONTINUOUS_CALLBACK;
-    params.timerCallback = timerSecondCallback;
-
-   TimerOne = Timer_open(Board_TIMER0, &params);
-
-    if (TimerOne == NULL)
-        dbgHaltAll(DLOC_TIMERONE_FAILED_INIT);
-
-
-    if (Timer_start(TimerOne) == Timer_STATUS_ERROR)
-        dbgHaltAll(DLOC_TIMERONE_FAILED_START);
-
-
-
-}
-
-void timerSecondCallback(Timer_Handle myHandle)
+void initTimerOne()
 {
-    dbgOutputLoc(DLOC_ENTER_TIMERONE_ISR);
-    uint32_t value = Timer_getCount(myHandle);
+    Timer_Params params1;
+    Timer_Params_init(&params1);
+    
+    /* Initalizing params */
+    params1.period = TIMER1_PERIOD;
+    params1.periodUnits = Timer_PERIOD_US;
+    params1.timerMode = Timer_CONTINUOUS_CALLBACK;
+    params1.timerCallback = timerQuarterCallback;
+    
+    /*Opening Timer*/
+    timer1 = Timer_open(Board_TIMER0, &params1);
+    
+    if (timer1 == NULL)
+    {
+        //fatalError(MAIN_TASK_DLOC_FAILED_TIMERONE_OPEN);
+    }
 
-    sendTimeMsgToQ1(value);
-    dbgOutputLoc(DLOC_LEAVE_TIMERONE_ISR);
-
-}
+    if (Timer_start(timer1) == Timer_STATUS_ERROR)
+    {
+        //fatalError(MAIN_TASK_DLOC_FAILED_TIMERONE_START);
+    }
+} /*Initalizes timer one.*/

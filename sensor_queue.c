@@ -1,70 +1,35 @@
 #include "sensor_queue.h"
 
-
-void message_init(message *msg)
-{
-    msg->type = no_type;
-    msg->value.sensor_val = ZERO;
-    msg->value.time_val = ZERO;
-}
-
-void MQ_init()
-{
-    sensor = xQueueCreate(QUEUE_LEN, sizeof(message));
-}
-
-bool sendToQueue(message m)
-{
+int sendToQueue(data_struct data){
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-    BaseType_t result = xQueueSendToBackFromISR(sensor,
-                                                &m, &xHigherPriorityTaskWoken);
-    bool success =  (pdPASS == result);
-    if(!success)
-    {
-        dbgHaltAll(DLOC_QUEUE_SEND_FAIL);
-    }
-    dbgOutputLoc(DLOC_QUEUE_SEND_SUCCESS);
-    return true;
+    BaseType_t result = xQueueSendToBackFromISR(sensor_queue_handle,
+                                                &data, &xHigherPriorityTaskWoken);
+    return  (pdPASS == result);
 }
 
-bool sendTimeMsgToQ1(unsigned int timeVal)
-{
-    dbgOutputLoc(DLOC_BEFORE_QUEUE_TIME);
-    message m = {
-           .type=time_val,
-           .value.sensor_val=0,
-           .value.time_val=timeVal
-    };
-
-    dbgOutputLoc(DLOC_QUEUE_SENDING_MSG);
-
-    return sendToQueue(m);
+int sendTimeMsgToQ1(unsigned int timeVal){
+    data_struct data = {.type=time_data, .value.sensor_val=0, 
+    .value.time_val=timeVal};
+    return sendToQueue(data);
 }
 
-bool sendSensorMsgToQ1(int mmDist)
-{
-    dbgOutputLoc(DLOC_BEFORE_QUEUE_SENSOR);
-    message m = {
-         .type=sensor_val,
-         .value.sensor_val=mmDist,
-         .value.time_val=0
-    };
-
-    dbgOutputLoc(DLOC_QUEUE_SENDING_MSG);
-    return sendToQueue(m);
+/* Might be blocking based on the Project Specifications.*/
+int sendSensorMsgToQ1(int mmDist, char direction){
+    data_struct data = {.type=sensor_data, .value.sensor_val=mmDist, 
+    .value.time_val=0, .direction = direction};
+    return sendToQueue(data);
 }
 
 
-message readMsgFromQ1()
-{
-    message m = {
-          .type=no_type,
-          .value.sensor_val=0,
-          .value.time_val=0
-    };
+data_struct readMsgFromQ1(){
+    data_struct data = {.type=no_data, .value.sensor_val=0,
+    .value.time_val=0, .direction =""};
+    xQueueReceive(sensor_queue_handle, &data, portMAX_DELAY);
 
-    dbgOutputLoc(DLOC_BEFORE_QUEUE_READ);
-    xQueueReceive(sensor, &m, portMAX_DELAY);
-    dbgOutputLoc(DLOC_AFTER_QUEUE_READ);
-    return m;
+    return data;
+}
+
+void initMessageQueue()
+{
+    sensor_queue_handle = xQueueCreate(QUEUE_LENGTH, sizeof(data_struct));
 }

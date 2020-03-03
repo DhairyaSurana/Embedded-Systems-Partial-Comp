@@ -3,37 +3,30 @@
 
 #include <FreeRTOS.h>
 #include <queue.h>
-#include "debug.h"
-#include <stdbool.h>
 
-#define QUEUE_LEN       120
+#define QUEUE_LENGTH 120
 #define QUEUE_ITEM_SIZE 8
-#define ZERO            0
 
-typedef enum data_t {no_type, time_val, sensor_val} data_t;
+typedef enum data_type{no_data, time_data, sensor_data} data_type; /*If there is an error the data type will be error*/
+typedef struct data_value{unsigned int time_val; int sensor_val;} data_value;
+typedef struct data_struct{data_type type; data_value value; char direction;} data_struct;
 
-typedef struct data{
-                    unsigned int time_val;
-                    int sensor_val;
-        } data;
+/* Global Handle for the sensor queue */
+QueueHandle_t sensor_queue_handle;
 
-typedef struct message {
-                    data_t type;
-                    data value;
-         } message;
+/* Writes message to queue using the data struct */
+int sendToQueue(data_struct data);
 
-QueueHandle_t sensor;
+/* Function to send a time value to a queue. */
+int sendTimeMsgToQ1(unsigned int timeVal);
 
-void message_init(message *msg);
+/* Function to send a sensor value to a queue. */
+int sendSensorMsgToQ1(int mmDist, char direction);
 
-void MQ_init();
+/* Function to read a message from a queue */
+data_struct readMsgFromQ1();
 
-bool sendToQueue(message m);
+void initMessageQueue();
 
-bool sendTimeMsgToQ1(unsigned int timeVal);
-
-bool sendSensorMsgToQ1(int mmDist);
-
-message readMsgFromQ1();
 
 #endif /* SENSOR_QUEUE_H_ */

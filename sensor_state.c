@@ -1,126 +1,72 @@
 #include "sensor_state.h"
 #include "debug.h"
-#include <stdio.h>
-#include <strings.h>
 
-static void printTimeInfo(char * uart, int time) {
+int FSM(sensor_struct *externalState, timeVal_t timeInc, sensorVal_t sensorVal, char direction)
+{ /* This is where we get the value of the sensor. */
 
-    sprintf(uart, "CurTime = %d ", time);
+    switch ((*externalState).curState)
+    {
+    case waiting_for_time1:
+    case waiting_for_time2:
+    case waiting_for_time3:
+    case waiting_for_time4:
+        if (timeInc == 0)
+        {
+            (*externalState).sensorTotal += sensorVal;
+            (*externalState).sensorCount++;
+        }
+        if (timeInc > 0)
+        {
+            (*externalState).curTime += timeInc;
+            (*externalState).sensorAvg = (*externalState).sensorTotal
+                    / (*externalState).sensorCount;
+            char sensorInfoPrintToUART[50] = "";
+            int sensoravg = (*externalState).sensorAvg;
+            int sensorcount = (*externalState).sensorCount;
+            sprintf(sensorInfoPrintToUART, "%c Sensor= %d \r\n", direction, sensoravg);//, sensorcount);
+            //sensorInfoPrintToUART = "";
+            //sprintf(sensorInfoPrintToUART, "Right Sensor= %d \r\n", sensoravg);
+            int i; /* Print to UART  */
+            for (i = 0; i < sizeof(sensorInfoPrintToUART) / sizeof(sensorInfoPrintToUART[0]); i++)
+            {
+                dbgUARTVal(sensorInfoPrintToUART[i]);
+            }
+            (*externalState).sensorTotal = 0;
+            (*externalState).sensorCount = 0;
+            if((*externalState).curState == waiting_for_time4)
+            {
+                char sensorInfoPrintToUART[50] = "";
+                int curtime = ((*externalState).curTime/100000);
+                //sprintf(sensorInfoPrintToUART, "CurTime= %d\r\n", curtime);
 
-    int i;
-    for (i = 0; i < strlen(uart); i++)
-        dbgUARTVal(uart[i]);
-}
-
-static void printSensorInfo(char * uart, int avg, int count) {
-
-    sprintf(uart, "(Sensor = %d, Count = %d) ", avg, count);
-
-    int i;
-    for (i = 0; i < strlen(uart); i++)
-        dbgUARTVal(uart[i]);
-
-}
-
-int StateMachine(status_t *curStatus, int timeInc, int sensorVal)
-{
-    int sensorAvg;
-    char uartOut[33] = "";
-    switch (curStatus->curState) {
-
-            case Init:
-
-                dbgOutputLoc(DLOC_STATE_INIT);
-                curStatus->curTime = 0;
-                curStatus->curState = WaitingForTime1;
-                break;
-
-            case WaitingForTime1:
-
-                dbgOutputLoc(DLOC_STATE_ONE);
-
-                if(timeInc == 0)
+                int i;
+                for (i = 0;i< sizeof(sensorInfoPrintToUART)/ sizeof(sensorInfoPrintToUART[0]); i++)
                 {
-                    curStatus->sensorTotal += sensorVal;
-                    curStatus->sensorCount++;
+                    dbgUARTVal(sensorInfoPrintToUART[i]);
                 }
+            }
+        }
+        /* Takes the current state and finds the value of the next state */
+        (*externalState).curState = (((*externalState).curState+1)%5);
+        if((*externalState).curState == init)
+        {
+            (*externalState).curState += 1;
+        }
+        break;
 
-                if(timeInc>0){
-
-                    curStatus->curTime+=timeInc;
-                    sensorAvg = curStatus->sensorTotal/curStatus->sensorCount;
-
-                    printSensorInfo(uartOut, sensorAvg, curStatus->sensorCount);
-
-                    curStatus->sensorTotal = 0;
-                    curStatus->sensorCount = 0;
-                    curStatus->curState = WaitingForTime2;
-                }
-
-                break;
-
-            case WaitingForTime2:
-
-                dbgOutputLoc(DLOC_STATE_TWO);
-
-                if(timeInc == 0) {
-
-                    curStatus->sensorTotal += sensorVal;
-                    curStatus->sensorCount++;
-                }
-
-                if(timeInc>0){
-
-                    curStatus->curTime+=timeInc;
-                    sensorAvg = curStatus->sensorTotal/curStatus->sensorCount;
-
-                    printSensorInfo(uartOut, sensorAvg, curStatus->sensorCount);
-
-                    curStatus->sensorTotal = 0;
-                    curStatus->sensorCount = 0;
-                    curStatus->curState = WaitingForTime3;
-                }
-
-                break;
-
-            case WaitingForTime3:
-
-                dbgOutputLoc(DLOC_STATE_THREE);
-
-                if(timeInc == 0){
-                    curStatus->sensorTotal += sensorVal;
-                    curStatus->sensorCount++;
-                }
-
-                if(timeInc>0){
-
-                    curStatus->curTime+=timeInc;
-                    sensorAvg = curStatus->sensorTotal/curStatus->sensorCount;
-
-                    printSensorInfo(uartOut, sensorAvg, curStatus->sensorCount);
-                    printTimeInfo(uartOut, curStatus->curTime/1000);
-
-                    curStatus->sensorTotal = 0;
-                    curStatus->sensorCount = 0;
-                    curStatus->curState = WaitingForTime1;
-                }
-
-                break;
-
-            default:
-                return 0;//fail
+    default:
+        return -1;
     }
-
-
-    dbgOutputLoc(DLOC_STATE_DONE);
-
     return 1;
 }
 
-void status_init(status_t *state)
+sensor_struct sensorStructInit(sensor_struct *state)
 {
-     state->curState = Init;
-     state->curTime = 0;
-     state->sensorCount = 0;
-     state->sensorTotal = 0;
-}
+
+    (*state).curTime = 0;
+    (*state).curState = waiting_for_time1;
+    (*state).sensorTotal = 0;
+    (*state).sensorCount = 0;
+
+    return *state;
+} /* Takes care of the Init state.  */
