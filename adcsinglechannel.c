@@ -44,7 +44,7 @@
 #include <ti/drivers/UART.h>
 #include <ti/drivers/ADC.h>
 #include <ti/drivers/Timer.h>
-#include <ti/drivers/PWM.h>
+//#include <ti/drivers/PWM.h>
 
 /* Example/Board Header files */
 #include "Board.h"
