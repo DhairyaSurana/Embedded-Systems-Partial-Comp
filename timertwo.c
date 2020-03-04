@@ -1,7 +1,7 @@
 
 #include "timertwo.h"
 #include "timerone.h"
-//#include "debug.h"
+#include "debug.h"
 //#include "sensor_state.h"
 
 
@@ -17,8 +17,8 @@ void sensorLeftCallback(Timer_Handle timerHandle)
     {
         timerLeftCountNow = Timer_getCount(timer1);
         int duration = timerLeftCountNow - timerLeftCountPrev;
-        int conversionCM = convertIntoCM(duration);
-        sendSensorMsgToQ1(conversionCM, "L");
+
+        sendSensorMsgToQ1(getDistInCM(duration), 'L');
     }
 }
 
@@ -32,8 +32,8 @@ void sensorRightCallback(Timer_Handle timerHandle)
     {
         timerRightCountNow = Timer_getCount(timer1);
         int duration = timerRightCountNow - timerRightCountPrev;
-        int conversionCM = convertIntoCM(duration);
-        sendSensorMsgToQ1(conversionCM, "R");
+
+        sendSensorMsgToQ1(getDistInCM(duration), "R");
     }
 }
 
@@ -46,11 +46,8 @@ void timer10Callback(Timer_Handle timerHandle)
     GPIO_write(Board_GPIO8_TRIG, 0);
 }
 
-int convertIntoCM(uint32_t duration)
-{
-    int d_cm = ((int)duration/TWO) / CONVERSION_FACTOR;
-    d_cm = (d_cm/100);
-    return d_cm;
+int getDistInCM(uint32_t duration) {
+    return duration/(TWO * CONVERSION_FACTOR * 100);
 }
 
 void initTimerTwo()
@@ -63,18 +60,16 @@ void initTimerTwo()
     params2.timerCallback = timer10Callback;
 
     timer2 = Timer_open(Board_TIMER1, &params2);
+
     if (timer2 == NULL)
-    {
-        //fatalError(MAIN_TASK_DLOC_FAILED_TIMERTWO_OPEN);
-    }
+        fatalError(MAIN_TASK_DLOC_FAILED_TIMERTWO_OPEN);
 
     if (Timer_start(timer2) == Timer_STATUS_ERROR)
-    {
-        //fatalError(MAIN_TASK_DLOC_FAILED_TIMERTWO_START);
-    }
+        fatalError(MAIN_TASK_DLOC_FAILED_TIMERTWO_START);
+
 }
 
-void initSharpIRSensor()
+void initUSSensor()
 {
     GPIO_setConfig(Board_GPIO9_LeftEcho, GPIO_CFG_IN_PU | GPIO_CFG_IN_INT_BOTH_EDGES);
     GPIO_setCallback(Board_GPIO9_LeftEcho, sensorLeftCallback);

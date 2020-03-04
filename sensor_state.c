@@ -27,7 +27,7 @@ int StateMachine(sensor_struct *externalState, timeVal_t timeInc, sensorVal_t se
                 int sensorAvg = externalState->sensorTotal/externalState->sensorCount;
 
                 char sensorInfoPrintToUART[50] = "";
-                sprintf(sensorInfoPrintToUART, " Distance: %d cm\r\n", sensorAvg);
+                sprintf(sensorInfoPrintToUART, "%c Distance: %d cm\r\n", direction, sensorAvg);
 
                 int i;
                 for (i = 0; i < sizeof(sensorInfoPrintToUART) / sizeof(char); i++)

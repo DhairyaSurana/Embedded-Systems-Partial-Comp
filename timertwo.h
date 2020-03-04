@@ -49,19 +49,22 @@ uint32_t timerLeftCountNow;
 uint32_t timerRightCountPrev;
 uint32_t timerRightCountNow;
 
-//int distance;
 static bool trigMode = true;
 static bool clearTrig = true;
+
 /*Sends to queue with the amount of time passed since the last callback */
 void timer10Callback(Timer_Handle timerHandle);
-/*edge triggered callback for sensor*/
+
+/*edge triggered callback for sensors*/
 void sensorLeftCallback(Timer_Handle timerHandle);
 void sensorRightCallback(Timer_Handle timerHandle);
+
 /*Converts sensor reading value into distance in mm*/
-int convertIntoCM(uint32_t duration);
+int convertToCM(uint32_t duration);
+
 /*Initializes timer two which has a period of 65 milliseconds */
 void initTimerTwo();
 
-void initSharpIRSensor();
+void initUSSensor();
 
 #endif /* TIMERTWO_H_ */
