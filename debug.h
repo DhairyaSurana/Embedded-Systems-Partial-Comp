@@ -2,7 +2,7 @@
 #define DEBUG_H
 
 /*debug constants to output to gpio pins, first 2 bits indicate which task (0 = main), last 6 indicate specific section*/
-#define MAIN_TASK_DLOC_ENTER_TASK 0x01
+#define DLOC_ENTER_TASK 0x01
 #define MAIN_TASK_DLOC_BEFORE_WHILE 0x02
 #define MAIN_TASK_DLOC_BEFORE_RECEIVE_FROM_QUEUE_IN_WHILE 0x03
 #define MAIN_TASK_DLOC_AFTER_RECEIVE_FROM_QUEUE_IN_WHILE 0x04
@@ -31,6 +31,6 @@ void dbgUARTVal(unsigned char outVal);
 void dbgOutputLoc(unsigned int outLoc);
 void fatalError(unsigned int outLoc);
 void initUART();
-void initDebugGPIO();
+void initGPIO();
 
 #endif

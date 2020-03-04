@@ -12,41 +12,43 @@
 #include <ti/drivers/dpl/HwiP.h>
 #include <stddef.h>
 
-void dbgUARTVal(unsigned char outVal)
-{
+void dbgUARTVal(unsigned char outVal){
+
     UART_write(uart, &outVal, sizeof(outVal));
 }
 
-void dbgOutputLoc(unsigned int outLoc)
-{
+void dbgOutputLoc(unsigned int outLoc){
+
     if (outLoc > 127)
-    {
         fatalError(MAIN_TASK_DLOC_PARAM_OUT_OF_BOUNDS);
-    }
+
 
     unsigned char first_half = (outLoc & 0x01)|((outLoc & 0x0e)<<4);
     unsigned char second_half = ((outLoc & 0x10)>>4)|((outLoc & 0x20)>>1)|(outLoc & 0xc0);
-    //Base 0 = Gpio 0-3
-    GPIOPinWrite(GPIOA0_BASE, 0b11100001, first_half);
 
-    //Base 1 = Gpio 4-7
-    GPIOPinWrite(GPIOA1_BASE, 0b11010001, second_half);
+    GPIOPinWrite(GPIOA0_BASE, 0b11100001, first_half);      // GPIO 0-3
+    GPIOPinWrite(GPIOA1_BASE, 0b11010001, second_half);     // GPIO 4-7
+
     unsigned char test = GPIOPinRead(GPIOA0_BASE, 0b11100001);
 }
 
-void fatalError(unsigned int outLoc)
-{
+void fatalError(unsigned int outLoc){
+
     dbgOutputLoc(outLoc);
+
     //temp code for now
     Timer_close(timer1);
     Timer_close(timer2);
+
     //need the ISR stop call here
     HwiP_disable();
     vTaskSuspendAll();
 }
 
-void initUART()
-{
+void initUART(){
+
+    UART_init();
+
     UART_Params uartParams;
 
     /* Create a UART with data processing off. */
@@ -59,14 +61,16 @@ void initUART()
 
     uart = UART_open(Board_UART0, &uartParams);
 
-    if (uart == NULL)
-    {
+    if (uart == NULL)   // Error checking for UART
         fatalError(MAIN_TASK_DLOC_FAILED_UART_OPEN);
-    }
+
 }
 
-void initDebugGPIO()
+void initGPIO()
 {
+
+    GPIO_init();
+
     GPIO_setConfig(Board_GPIO0, GPIO_CFG_OUT_STD | GPIO_CFG_OUT_LOW);
     GPIO_setConfig(Board_GPIO1, GPIO_CFG_OUT_STD | GPIO_CFG_OUT_LOW);
     GPIO_setConfig(Board_GPIO2, GPIO_CFG_OUT_STD | GPIO_CFG_OUT_LOW);
