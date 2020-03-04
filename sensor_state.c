@@ -1,12 +1,13 @@
 #include "sensor_state.h"
 #include "debug.h"
 
-//static sensor_state getNextState(sensor_struct *externalState) {
-//    return (externalState->curState+1)%5
-//}
 
-int StateMachine(sensor_struct *externalState, timeVal_t timeInc, sensorVal_t sensorVal, char direction)
+int StateMachine(sensor_struct *externalState, data_struct *sens_msg)
 { /* This is where we get the value of the sensor. */
+
+    timeVal_t timeInc = sens_msg->value.time_val;
+    sensorVal_t sensorVal = sens_msg->value.sensor_val;
+    char direction = sens_msg->direction;
 
     switch (externalState->curState){
 

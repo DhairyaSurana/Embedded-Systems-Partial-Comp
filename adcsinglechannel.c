@@ -47,8 +47,7 @@ void vMainTask (void *pvParameters){
         sens_msg = readMsgFromQ1();
 
         if (sens_msg.type != no_data)
-            StateMachine(&state, sens_msg.value.time_val, sens_msg.value.sensor_val, sens_msg.direction);
-
+            StateMachine(&state, &sens_msg);
     }
 }
 
