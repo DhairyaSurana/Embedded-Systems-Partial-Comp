@@ -33,17 +33,13 @@ void vMainTask (void *pvParameters){
     sensor_struct state;
     sensorStructInit(&state);
 
-    data_struct sens_msg;
-
-
     Timer_init();
     initTimerOne();
     initTimerTwo();
 
-
     while (1){
 
-        sens_msg = readMsgFromQ1();
+        data_struct sens_msg = readMsgFromQ1(); // reads message from queue
 
         if (sens_msg.type != no_data)
             printSensorInfo(&state, &sens_msg);

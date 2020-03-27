@@ -8,7 +8,6 @@ void printSensorInfo(sensor_struct *sensor, data_struct *sens_msg)
 
     timeVal_t timeInc = sens_msg->value.time_val;
     sensorVal_t sensorVal = sens_msg->value.sensor_val;
-    char direction = sens_msg->direction;
 
     if (timeInc == 0) {
          sensor->sensorTotal += sensorVal;
@@ -21,7 +20,7 @@ void printSensorInfo(sensor_struct *sensor, data_struct *sens_msg)
          int sensorAvg = sensor->sensorTotal/sensor->sensorCount;
 
          char sensorInfoPrintToUART[50] = "";
-         sprintf(sensorInfoPrintToUART, "%c Distance: %d cm\r\n", direction, sensorAvg);
+         sprintf(sensorInfoPrintToUART, "Distance: %d cm\r\n", sensorAvg);
 
          int i;
          for (i = 0; i < sizeof(sensorInfoPrintToUART) / sizeof(char); i++)

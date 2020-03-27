@@ -80,6 +80,8 @@ void initGPIO()
     GPIO_setConfig(Board_GPIO6, GPIO_CFG_OUT_STD | GPIO_CFG_OUT_LOW);
     GPIO_setConfig(Board_GPIO7, GPIO_CFG_OUT_STD | GPIO_CFG_OUT_LOW);
 
+    GPIO_setConfig(Board_GPIO9_Echo, GPIO_CFG_IN_PU | GPIO_CFG_IN_INT_BOTH_EDGES);
+
     GPIO_write(Board_GPIO0, 0);
     GPIO_write(Board_GPIO1, 0);
     GPIO_write(Board_GPIO2, 0);
