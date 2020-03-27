@@ -33,8 +33,7 @@ void vMainTask (void *pvParameters){
     sensor_struct state;
     sensorStructInit(&state);
 
-    data_struct sens_msg = {.type=no_data, .value.sensor_val=0,
-                            .value.time_val=0, .direction=""};
+    data_struct sens_msg;
 
 
     Timer_init();
@@ -47,7 +46,7 @@ void vMainTask (void *pvParameters){
         sens_msg = readMsgFromQ1();
 
         if (sens_msg.type != no_data)
-            StateMachine(&state, &sens_msg);
+            printSensorInfo(&state, &sens_msg);
     }
 }
 
