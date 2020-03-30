@@ -2,22 +2,22 @@
 #include "debug.h"
 
 
-void printSensorInfo(sensor_struct *sensor, data_struct *sens_msg)
+void printSensorInfo(sensor_struct *curr_sensor, data_struct *new_sens_msg)
 {
     /* This is where we get the value of the sensor. */
 
-    timeVal_t timeInc = sens_msg->value.time_val;
-    sensorVal_t sensorVal = sens_msg->value.sensor_val;
+    timeVal_t timeInc = new_sens_msg->value.time_val;
+    sensorVal_t sensorVal = new_sens_msg->value.sensor_val;
 
     if (timeInc == 0) {
-         sensor->sensorTotal += sensorVal;
-         sensor->sensorCount++;
+         curr_sensor->total += sensorVal;
+         curr_sensor->count++;
     }
 
     else {
 
-         sensor->curTime += timeInc;
-         int sensorAvg = sensor->sensorTotal/sensor->sensorCount;
+         curr_sensor->curTime += timeInc;
+         int sensorAvg = curr_sensor->total/curr_sensor->count;
 
          char sensorInfoPrintToUART[50] = "";
          sprintf(sensorInfoPrintToUART, "Distance: %d cm\r\n", sensorAvg);
@@ -26,8 +26,8 @@ void printSensorInfo(sensor_struct *sensor, data_struct *sens_msg)
          for (i = 0; i < sizeof(sensorInfoPrintToUART) / sizeof(char); i++)
              dbgUARTVal(sensorInfoPrintToUART[i]);
 
-         sensor->sensorTotal = 0;
-         sensor->sensorCount = 0;
+         curr_sensor->total = 0;
+         curr_sensor->count = 0;
 
      }
 
@@ -36,7 +36,7 @@ void printSensorInfo(sensor_struct *sensor, data_struct *sens_msg)
 void sensorStructInit(sensor_struct *state){
 
     state->curTime = 0;
-    state->sensorTotal = 0;
-    state->sensorCount = 0;
+    state->total = 0;
+    state->count = 0;
 
 }

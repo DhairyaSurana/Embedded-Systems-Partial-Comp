@@ -27,22 +27,23 @@ void vMainTask (void *pvParameters){
     initGPIO();
     initUART();
 
-    initMessageQueue();
-    initUSSensor();
+    initMessageQueue(); // sets up queue
+    initUSSensor();     // sends sensor data (nonblocking) to queue via callback within this function
 
-    sensor_struct state;
-    sensorStructInit(&state);
+    sensor_struct curr_sens_data;
+    sensorStructInit(&curr_sens_data);  // holds the current sensor data
 
+    /* Initialize timers */
     Timer_init();
     initTimerOne();
     initTimerTwo();
 
     while (1){
 
-        data_struct sens_msg = readMsgFromQ1(); // reads message from queue
+        data_struct new_sens_msg = readMsgFromQ1(); // reads message from queue (non-blocking)
 
-        if (sens_msg.type != no_data)
-            printSensorInfo(&state, &sens_msg);
+        if (new_sens_msg.type != no_data)
+            printSensorInfo(&curr_sens_data, &new_sens_msg);    // updates the current data with the new data from the message and prints out values
     }
 }
 

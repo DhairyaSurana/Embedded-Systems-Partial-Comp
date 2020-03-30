@@ -9,8 +9,9 @@ int getDistInCM(uint32_t duration) {
 
 
 /* Calculates distance and sends that data to the queue */
+// timerHandle is the interrupt
 void sensorCallback(Timer_Handle timerHandle) {
-
+// consider making count variables static
     if (GPIO_read(Board_GPIO9_Echo) == 1)
         timerLeftCountPrev = Timer_getCount(timer1);
 
@@ -51,6 +52,6 @@ void initTimerTwo() {
 /* Assigns the sensorCallback function to GPIO 9*/
 void initUSSensor() {
 
-    GPIO_setCallback(Board_GPIO9_Echo, sensorCallback); // bind left sensor callback to left echo interrupt
-    GPIO_enableInt(Board_GPIO9_Echo);   // enable left echo interrupt
+    GPIO_setCallback(Board_GPIO9_Echo, sensorCallback); // bind left sensor callback to echo (GPIO 9) pin interrupt
+    GPIO_enableInt(Board_GPIO9_Echo);   // enable echo interrupt
 }
