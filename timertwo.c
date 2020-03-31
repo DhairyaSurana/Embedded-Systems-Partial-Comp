@@ -11,14 +11,16 @@ int getDistInCM(uint32_t duration) {
 /* Calculates distance and sends that data to the queue */
 // timerHandle is the interrupt
 void sensorCallback(Timer_Handle timerHandle) {
-// consider making count variables static
+
+    static uint32_t prev_count, curr_count;
+
     if (GPIO_read(Board_GPIO9_Echo) == 1)
-        timerLeftCountPrev = Timer_getCount(timer1);
+        prev_count = Timer_getCount(timer1);
 
     else {
 
-        timerLeftCountNow = Timer_getCount(timer1);
-        int dist = getDistInCM(timerLeftCountNow - timerLeftCountPrev); // Calculates distance
+        curr_count = Timer_getCount(timer1);
+        int dist = getDistInCM(curr_count - prev_count); // Calculates distance
 
         sendSensorMsgToQ1(dist);  // sends message to queue
     }

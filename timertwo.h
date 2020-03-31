@@ -43,11 +43,6 @@ ADC_Handle adc;
 /* conversion result variables */
 uint16_t adcValue0;
 uint32_t adcValue0MicroVolt;
-//uint32_t duration;
-uint32_t timerLeftCountPrev;
-uint32_t timerLeftCountNow;
-uint32_t timerRightCountPrev;
-uint32_t timerRightCountNow;
 
 static bool trigMode = true;
 static bool clearTrig = true;
